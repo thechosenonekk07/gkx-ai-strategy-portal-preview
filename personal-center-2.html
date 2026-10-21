@@ -1,0 +1,709 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>国科信 - 关注与收藏</title>
+  <style>
+    :root {
+      --brand: #165DFF;
+      --brand-hover: #4080FF;
+      --brand-light: #E8F3FF;
+      --bg-page: #D8E7FC;
+      --surface: #FFFFFF;
+      --module: #F7F8FA;
+      --text-1: #1D2129;
+      --text-2: #4E5969;
+      --text-3: #86909C;
+      --text-4: #C9CDD4;
+      --border: #E5E6EB;
+      --success: #00B42A;
+      --warning: #FF7D00;
+      font-family: "PingFang SC", "PingFang HK", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-width: 1180px;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.78) 0, rgba(255,255,255,.36) 38%, rgba(255,255,255,.18) 100%),
+        var(--bg-page);
+      color: var(--text-1);
+      font-size: 14px;
+      line-height: 22px;
+      letter-spacing: 0;
+    }
+
+    button, select, input { font: inherit; }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      background: rgba(255, 255, 255, .62);
+      border-right: 1px solid rgba(198, 212, 232, .7);
+    }
+
+    .brand {
+      height: 74px;
+      padding: 23px 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid rgba(198, 212, 232, .64);
+    }
+
+    .brand-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--brand);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 17px;
+      font-weight: 600;
+    }
+
+    .brand-title {
+      font-size: 16px;
+      line-height: 22px;
+      font-weight: 600;
+    }
+
+    .brand-subtitle {
+      color: var(--text-3);
+      font-size: 12px;
+      line-height: 18px;
+      margin-top: 2px;
+      white-space: nowrap;
+    }
+
+    .nav { padding: 10px; }
+
+    .nav-item {
+      height: 42px;
+      border-radius: 6px;
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-2);
+      font-size: 15px;
+      font-weight: 500;
+      margin: 4px 0;
+    }
+
+    .nav-item.active {
+      background: linear-gradient(90deg, #E8F3FF, rgba(232,243,255,.58));
+      color: var(--brand);
+    }
+
+    .nav-item .icon {
+      width: 18px;
+      height: 18px;
+      color: currentColor;
+      flex: 0 0 auto;
+    }
+
+    .nav-spacer { flex: 1; }
+
+    .main {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      height: 56px;
+      padding: 0 24px;
+      background: rgba(255,255,255,.62);
+      border-bottom: 1px solid rgba(198, 212, 232, .64);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .menu-icon {
+      width: 22px;
+      height: 22px;
+      color: var(--text-2);
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .auth-pill {
+      height: 32px;
+      padding: 0 14px;
+      border-radius: 18px;
+      border: 1px solid #C9D5E6;
+      background: rgba(255,255,255,.72);
+      color: var(--text-2);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+    }
+
+    .avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #C3CAD4, #A8B0BC);
+    }
+
+    .account {
+      max-width: 210px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: var(--text-1);
+      font-weight: 500;
+    }
+
+    .page-head {
+      height: 60px;
+      padding: 0 24px;
+      background: rgba(255,255,255,.62);
+      border-bottom: 1px solid rgba(198, 212, 232, .64);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .page-head h1 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 28px;
+      font-weight: 600;
+    }
+
+    .content {
+      padding: 20px 24px 28px;
+      min-height: calc(100vh - 116px);
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 160px minmax(0, 1fr);
+      gap: 16px;
+      max-width: 1440px;
+    }
+
+    .inner-tabs {
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(229,230,235,.8);
+      border-radius: 8px;
+      padding: 8px;
+      height: fit-content;
+    }
+
+    .tab {
+      width: 100%;
+      height: 42px;
+      border: 0;
+      background: transparent;
+      border-radius: 6px;
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      color: var(--text-2);
+      font-size: 15px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .tab:last-child { margin-bottom: 0; }
+
+    .tab.active {
+      background: linear-gradient(90deg, #E8F3FF, rgba(232,243,255,.6));
+      color: var(--brand);
+    }
+
+    .panel {
+      background: var(--surface);
+      border-radius: 8px;
+      border: 1px solid rgba(229,230,235,.88);
+      padding: 24px;
+      min-height: 660px;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-head h2 {
+      margin: 0 0 4px;
+      font-size: 18px;
+      line-height: 26px;
+      font-weight: 600;
+    }
+
+    .muted {
+      color: var(--text-3);
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .btn {
+      height: 32px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text-2);
+      padding: 0 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .btn.primary {
+      border-color: var(--brand);
+      background: var(--brand);
+      color: #fff;
+    }
+
+    .btn:hover {
+      color: var(--brand);
+      border-color: var(--brand-hover);
+    }
+
+    .btn.primary:hover {
+      color: #fff;
+      background: var(--brand-hover);
+    }
+
+    .explain {
+      margin-top: 16px;
+      padding: 12px 16px;
+      border: 1px solid #BEDAFF;
+      border-radius: 6px;
+      background: #F2F7FF;
+      color: var(--text-2);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .explain strong {
+      color: var(--text-1);
+      font-weight: 600;
+    }
+
+    .block {
+      margin-top: 16px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .toolbar {
+      height: 56px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      border-bottom: 1px solid var(--border);
+      background: #fff;
+    }
+
+    .block-title {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 600;
+    }
+
+    .filters {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .filter {
+      height: 32px;
+      border: 1px solid #C9D5E6;
+      border-radius: 4px;
+      padding: 0 12px;
+      background: #fff;
+      color: var(--text-2);
+      min-width: 128px;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    th, td {
+      height: 40px;
+      padding: 0 16px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: var(--text-2);
+      vertical-align: middle;
+    }
+
+    th {
+      background: var(--module);
+      color: var(--text-1);
+      font-weight: 500;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    .tag-list {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .tag {
+      height: 24px;
+      max-width: 112px;
+      border-radius: 4px;
+      padding: 0 8px;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid #BEDAFF;
+      background: #F2F7FF;
+      color: var(--brand);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .tag.neutral {
+      border-color: var(--border);
+      background: var(--module);
+      color: var(--text-2);
+    }
+
+    .state {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-2);
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--success);
+      flex: 0 0 auto;
+    }
+
+    .dot.warn { background: var(--warning); }
+
+    .link {
+      color: var(--brand);
+      border: 0;
+      background: transparent;
+      padding: 0;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .empty {
+      height: 140px;
+      text-align: center;
+      color: var(--text-3);
+    }
+
+    .footer-actions {
+      margin-top: 20px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 16px;
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-logo">G</div>
+        <div>
+          <div class="brand-title">国科信</div>
+          <div class="brand-subtitle">清华大学深圳研究院</div>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="侧边导航">
+        <div class="nav-item active">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+            <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"></path>
+            <path d="M4 20a8 8 0 0 1 16 0"></path>
+          </svg>
+          <span>我的账户</span>
+        </div>
+        <div class="nav-item">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+            <path d="M4 21V7l8-4 8 4v14"></path>
+            <path d="M9 21v-8h6v8"></path>
+            <path d="M7 9h.01M17 9h.01"></path>
+          </svg>
+          <span>组织机构</span>
+          <span class="nav-spacer"></span>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+            <path d="m7 10 5 5 5-5"></path>
+          </svg>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <path d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+        <div class="top-actions">
+          <div class="auth-pill">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+              <path d="M12 3 8 7v5a4 4 0 0 0 8 0V7l-4-4Z"></path>
+              <path d="M8 7h8"></path>
+              <path d="M7 16a6 6 0 0 0 10 0"></path>
+            </svg>
+            机构认证
+          </div>
+          <div class="avatar" aria-hidden="true"></div>
+          <div class="account">a1059778569@163.com</div>
+        </div>
+      </header>
+
+      <div class="page-head">
+        <h1>我的账户</h1>
+        <button class="btn primary">保存调整</button>
+      </div>
+
+      <section class="content">
+        <div class="workspace">
+          <aside class="inner-tabs" aria-label="账户设置">
+            <button class="tab">基本信息</button>
+            <button class="tab active">关注与收藏</button>
+          </aside>
+
+          <div class="panel">
+            <div class="section-head">
+              <div>
+                <h2>关注与收藏</h2>
+                <div class="muted">关注用于形成推荐标签；收藏用于保存具体内容。两类操作分层管理。</div>
+              </div>
+              <button class="btn primary">查看推荐内容</button>
+            </div>
+
+            <div class="explain">
+              <div><strong>关注</strong>：关注学者、产业方向、学术分类、热词，形成用户标签，用于推荐新增内容。</div>
+              <div><strong>收藏</strong>：收藏某篇文献、某份报告、某个课程或活动，用于后续回看，不作为关注对象。</div>
+            </div>
+
+            <section class="block">
+              <div class="toolbar">
+                <div class="block-title">我的关注</div>
+                <div class="filters">
+                  <select class="filter" id="followTypeFilter">
+                    <option>全部关注类型</option>
+                    <option>学者</option>
+                    <option>产业方向</option>
+                    <option>学术分类</option>
+                    <option>热词</option>
+                  </select>
+                  <button class="btn">新增关注</button>
+                </div>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th style="width: 18%">关注类型</th>
+                      <th style="width: 22%">关注对象</th>
+                      <th style="width: 24%">形成用户标签</th>
+                      <th style="width: 24%">推荐更新范围</th>
+                      <th style="width: 12%">操作</th>
+                    </tr>
+                  </thead>
+                  <tbody id="followRows"></tbody>
+                </table>
+              </div>
+            </section>
+
+            <section class="block">
+              <div class="toolbar">
+                <div class="block-title">我的收藏</div>
+                <div class="filters">
+                  <select class="filter" id="favoriteTypeFilter">
+                    <option>全部内容类型</option>
+                    <option>资讯</option>
+                    <option>文献</option>
+                    <option>报告</option>
+                    <option>人才</option>
+                    <option>顶会</option>
+                    <option>课程</option>
+                    <option>活动</option>
+                  </select>
+                </div>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th style="width: 12%">内容类型</th>
+                      <th style="width: 30%">收藏内容</th>
+                      <th style="width: 24%">实体标签</th>
+                      <th style="width: 22%">来源系统</th>
+                      <th style="width: 12%">操作</th>
+                    </tr>
+                  </thead>
+                  <tbody id="favoriteRows"></tbody>
+                </table>
+              </div>
+            </section>
+
+            <div class="footer-actions">
+              <button class="btn">返回</button>
+              <button class="btn primary">保存本页调整</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const initialFollows = [
+      { type: "产业方向", name: "人工智能", tags: ["人工智能", "产业", "科技前沿"], scope: "更新人工智能相关资讯、文献、报告、课程、活动" },
+      { type: "产业方向", name: "集成电路", tags: ["集成电路", "半导体", "产业趋势"], scope: "更新产业报告、政策资讯、会议活动" },
+      { type: "学术分类", name: "计算机科学技术", tags: ["计算机科学技术", "文献", "专家"], scope: "更新相关文献、作者动态、顶会信息" },
+      { type: "学者", name: "张某某", tags: ["张某某", "人工智能", "青年学者"], scope: "更新该学者论文、会议、科研动态" },
+      { type: "热词", name: "多模态智能", tags: ["多模态智能", "大模型", "人工智能"], scope: "更新相关文献、资讯、热词内容" }
+    ];
+
+    const initialFavorites = [
+      { type: "文献", name: "可解释人工智能方法综述", tags: ["文献", "人工智能", "可信AI"], source: "科技情报挖掘系统" },
+      { type: "报告", name: "集成电路产业趋势分析报告", tags: ["报告", "产业趋势", "集成电路"], source: "科技报告服务系统" },
+      { type: "资讯", name: "低空经济技术应用动态", tags: ["资讯", "低空经济", "政策"], source: "科技信息展示系统" },
+      { type: "课程", name: "科技情报分析入门课程", tags: ["课程", "科技情报", "入门"], source: "门户CMS" },
+      { type: "活动", name: "智能制造产业沙龙", tags: ["活动", "智能制造", "成果转化"], source: "门户CMS" }
+    ];
+
+    let follows = initialFollows.map(item => ({ ...item }));
+    let favorites = initialFavorites.map(item => ({ ...item }));
+    let followFilter = "全部关注类型";
+    let favoriteFilter = "全部内容类型";
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, function(char) {
+        return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" })[char];
+      });
+    }
+
+    function renderTags(tags) {
+      return `<div class="tag-list">${tags.map(function(tag, index) {
+        return `<span class="tag${index > 1 ? " neutral" : ""}" title="${escapeHtml(tag)}">${escapeHtml(tag)}</span>`;
+      }).join("")}</div>`;
+    }
+
+    function renderFollows() {
+      const visible = follows
+        .map((item, index) => ({ item, index }))
+        .filter(entry => followFilter === "全部关注类型" || entry.item.type === followFilter);
+      if (!visible.length) {
+        document.getElementById("followRows").innerHTML = '<tr><td class="empty" colspan="5">暂无符合条件的关注</td></tr>';
+        return;
+      }
+      document.getElementById("followRows").innerHTML = visible.map(function(entry) {
+        const item = entry.item;
+        return `<tr>
+          <td>${escapeHtml(item.type)}</td>
+          <td title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</td>
+          <td>${renderTags(item.tags)}</td>
+          <td title="${escapeHtml(item.scope)}">${escapeHtml(item.scope)}</td>
+          <td><button class="link" data-action="unfollow" data-index="${entry.index}">取消关注</button></td>
+        </tr>`;
+      }).join("");
+    }
+
+    function renderFavorites() {
+      const visible = favorites
+        .map((item, index) => ({ item, index }))
+        .filter(entry => favoriteFilter === "全部内容类型" || entry.item.type === favoriteFilter);
+      if (!visible.length) {
+        document.getElementById("favoriteRows").innerHTML = '<tr><td class="empty" colspan="5">暂无符合条件的收藏</td></tr>';
+        return;
+      }
+      document.getElementById("favoriteRows").innerHTML = visible.map(function(entry) {
+        const item = entry.item;
+        return `<tr>
+          <td>${escapeHtml(item.type)}</td>
+          <td title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</td>
+          <td>${renderTags(item.tags)}</td>
+          <td title="${escapeHtml(item.source)}">${escapeHtml(item.source)}</td>
+          <td><button class="link" data-action="unfavorite" data-index="${entry.index}">取消收藏</button></td>
+        </tr>`;
+      }).join("");
+    }
+
+    document.getElementById("followTypeFilter").addEventListener("change", function(event) {
+      followFilter = event.target.value;
+      renderFollows();
+    });
+
+    document.getElementById("favoriteTypeFilter").addEventListener("change", function(event) {
+      favoriteFilter = event.target.value;
+      renderFavorites();
+    });
+
+    document.addEventListener("click", function(event) {
+      const target = event.target.closest("[data-action]");
+      if (!target) return;
+      if (target.dataset.action === "unfollow") {
+        follows.splice(Number(target.dataset.index), 1);
+        renderFollows();
+      }
+      if (target.dataset.action === "unfavorite") {
+        favorites.splice(Number(target.dataset.index), 1);
+        renderFavorites();
+      }
+    });
+
+    renderFollows();
+    renderFavorites();
+  </script>
+</body>
+</html>

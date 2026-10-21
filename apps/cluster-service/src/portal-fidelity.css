@@ -1,0 +1,373 @@
+:root {
+  font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif;
+  color: #1d2129;
+  background: #f3f6fb;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* { box-sizing: border-box; }
+html { min-width: 1200px; scroll-behavior: smooth; }
+body { margin: 0; min-width: 1200px; min-height: 100vh; background: #f3f6fb; }
+button, input, select { font: inherit; }
+button, a { -webkit-tap-highlight-color: transparent; }
+
+.fp-back-to-portal { display: none; }
+
+html.is-portal-embed .fp-back-to-portal {
+  position: fixed;
+  z-index: 120;
+  top: 16px;
+  left: 20px;
+  display: none;
+  min-height: 36px;
+  padding: 0 13px;
+  align-items: center;
+  gap: 7px;
+  color: #2d5478;
+  background: #fff;
+  border: 1px solid #d8e3ee;
+  border-radius: 4px;
+  box-shadow: 0 8px 20px rgba(31, 66, 103, .12);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 18px;
+  text-decoration: none;
+  transition: color .18s ease, background-color .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+
+html.is-portal-embed .fp-back-to-portal:hover {
+  color: #1769c4;
+  background: #f7fbff;
+  border-color: #a9c8e6;
+  box-shadow: 0 10px 24px rgba(31, 86, 137, .16);
+}
+
+html.is-portal-embed .fp-back-to-portal:focus-visible {
+  outline: 2px solid #1769c4;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  html.is-portal-embed .fp-back-to-portal { transition: none; }
+}
+
+.fp-site-header {
+  position: relative;
+  z-index: 60;
+  width: 100%;
+  height: 64px;
+  background: var(--fp-header-background, rgba(255,255,255,.96));
+}
+
+.fp-site-header-inner {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 64px;
+  padding-left: 24px;
+  color: #1d2129;
+}
+
+.fp-brand {
+  display: inline-flex;
+  flex: 0 0 257px;
+  align-items: center;
+  gap: 10px;
+  height: 64px;
+  color: #1d2129;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.fp-brand img { width: 28px; height: 28px; object-fit: contain; }
+.fp-brand strong { font-size: 16px; line-height: 24px; font-weight: 600; }
+
+.fp-main-nav { display: flex; align-items: stretch; height: 64px; }
+.fp-main-nav > a,
+.fp-header-menu > button,
+.fp-nav-static {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-width: 124px;
+  height: 64px;
+  padding: 0 20px;
+  border: 0;
+  color: #1d2129;
+  background: transparent;
+  font-size: 16px;
+  line-height: 24px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.fp-nav-static.is-disabled {
+  gap: 7px;
+  color: #86909c;
+}
+.fp-nav-static.is-disabled small {
+  padding: 1px 4px;
+  color: #697789;
+  background: #f2f3f5;
+  border-radius: 2px;
+  font-size: 11px;
+  font-weight: 400;
+}
+.fp-main-nav > a { min-width: 80px; }
+.fp-header-menu { position: relative; height: 64px; }
+.fp-header-menu.is-active > button {
+  color: #165dff;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .24) 0%, rgba(255, 255, 255, .48) 100%);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  font-weight: 500;
+}
+.fp-header-menu > button { cursor: pointer; }
+.fp-header-popover {
+  position: absolute;
+  top: 58px;
+  left: 50%;
+  display: none;
+  width: 176px;
+  padding: 8px;
+  transform: translateX(-50%);
+  background: #fff;
+  border: 1px solid #e5e6eb;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(25,55,100,.12);
+}
+.fp-header-menu.is-open .fp-header-popover { display: grid; }
+.fp-header-popover a {
+  padding: 10px 12px;
+  border-radius: 4px;
+  color: #1d2129;
+  font-size: 14px;
+  text-decoration: none;
+}
+.fp-header-popover a:hover,
+.fp-header-popover a:focus-visible { color: #165dff; background: #f2f6ff; outline: none; }
+.fp-header-popover a[aria-current="page"] { color: #165dff; background: #eaf2ff; font-weight: 600; }
+
+.fp-global-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 320px;
+  height: 32px;
+  margin-left: auto;
+  margin-right: 24px;
+  border: 1px solid #e5e6eb;
+  background: #fff;
+}
+.fp-global-search input {
+  width: 100%;
+  height: 100%;
+  padding: 0 38px 0 12px;
+  border: 0;
+  outline: 0;
+  color: #4e5969;
+  font-size: 13px;
+}
+.fp-global-search input::placeholder { color: #c0c5cc; }
+.fp-global-search svg { position: absolute; right: 12px; color: #86909c; }
+.fp-global-search.is-disabled { background: #f7f8fa; }
+.fp-global-search.is-disabled input { color: #a9b0ba; background: transparent; cursor: not-allowed; }
+.fp-global-search.is-disabled > span {
+  overflow: hidden;
+  padding: 0 38px 0 12px;
+  color: #86909c;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fp-header-link {
+  display: grid;
+  place-items: center;
+  width: 80px;
+  height: 64px;
+  color: #1d2129;
+  font-size: 16px;
+}
+.fp-header-link.is-disabled { width: 88px; color: #697789; font-size: 13px; }
+.fp-register {
+  display: grid;
+  flex: 0 0 112px;
+  place-items: center;
+  height: 64px;
+  color: #fff;
+  background: #165dff;
+  font-size: 16px;
+}
+.fp-register.is-disabled { color: #86909c; background: #f2f3f5; }
+
+.fp-section-heading {
+  display: flex;
+  align-items: center;
+  width: 1200px;
+  height: 64px;
+}
+.fp-section-heading > img {
+  flex: 0 0 56px;
+  width: 56px;
+  height: 56px;
+  margin-right: 16px;
+  object-fit: cover;
+}
+.fp-section-heading-copy h2 {
+  margin: 0;
+  color: #1d2129;
+  font-size: 28px;
+  line-height: 40px;
+  font-weight: 600;
+}
+.fp-section-heading-copy p {
+  margin: 0;
+  color: #4e5969;
+  font-size: 16px;
+  line-height: 24px;
+}
+.fp-section-heading-actions { display: flex; align-items: center; gap: 12px; margin-left: auto; }
+
+.fp-card { background: #fff; border-radius: 8px; }
+.fp-muted { color: #86909c; }
+.fp-link { color: #165dff; }
+.fp-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 3px;
+  background: #f2f3f5;
+  color: #4e5969;
+  font-size: 13px;
+  line-height: 20px;
+}
+.fp-tag.is-blue { color: #165dff; background: #e8f3ff; }
+
+.fp-section-locator.fp-section-locator {
+  position: sticky;
+  z-index: 40;
+  top: 96px;
+  right: auto;
+  align-self: start;
+  width: 156px;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+  color: #59697f;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.fp-section-locator.fp-section-locator > button {
+  position: relative;
+  width: 100%;
+  min-height: 38px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  color: #59697f;
+  background: transparent;
+  border: 0;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 22px;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+  pointer-events: auto;
+  touch-action: manipulation;
+  transition: color 140ms ease, background-color 140ms ease;
+}
+.fp-section-locator.fp-section-locator > button span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fp-section-locator.fp-section-locator > button:hover { color: #1769ff; background: rgba(255, 255, 255, .56); }
+.fp-section-locator.fp-section-locator > button.is-active { color: #1769ff; background: #fff; box-shadow: none; font-weight: 600; }
+.fp-section-locator.fp-section-locator > button:focus-visible { outline: 2px solid #165dff; outline-offset: 2px; }
+.fp-section-locator.fp-section-locator > .fp-locator-top { margin-top: 8px; padding-top: 0; color: #59697f; border-top: 0; }
+
+/* The brain-atlas locator is anchored to the content workspace, starts 120px
+   below that workspace, and only then becomes sticky. Standalone portal pages
+   use this stage so the locator never floats over their hero/banner. */
+.fp-locator-stage {
+  position: relative;
+  width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+.fp-locator-stage > :first-child,
+.fp-locator-stage > .fp-section-locator.fp-section-locator {
+  grid-column: 1;
+  grid-row: 1;
+}
+.fp-locator-stage > .fp-section-locator.fp-section-locator {
+  justify-self: end;
+  margin-top: 120px;
+  transform: translateX(calc(100% + 24px));
+}
+
+.sdc-shell > .fp-section-locator.fp-section-locator,
+.trs-shell > .fp-section-locator.fp-section-locator,
+.tds-shell > .fp-section-locator.fp-section-locator,
+.tp-service-shell > .fp-section-locator.fp-section-locator {
+  position: sticky;
+  z-index: 35;
+  top: 96px;
+  right: auto;
+  align-self: start;
+  justify-self: end;
+  width: 156px;
+  margin-top: 120px;
+  transform: translateX(calc(100% + 24px));
+}
+.sdc-shell > .fp-section-locator.fp-section-locator,
+.trs-shell > .fp-section-locator.fp-section-locator,
+.tds-shell > .fp-section-locator.fp-section-locator { grid-column: 2; grid-row: 1; }
+.tp-service-shell > .fp-section-locator.fp-section-locator { grid-column: 3; grid-row: 1; }
+.sdc-shell > .sdc-main-column,
+.trs-shell > .trs-main-column { grid-column: 2; grid-row: 1; }
+
+/* Keep the decision-support content beside its module navigation. The shared
+   section locator occupies the same grid cell before being translated into
+   the right rail, so auto-placement would otherwise push the content into the
+   narrow navigation column on the next row. */
+@media (min-width: 769px) {
+  .tds-shell > .tds-main-column { grid-column: 2; grid-row: 1; }
+}
+
+@media (max-width: 1500px) {
+  .fp-brand { flex-basis: 218px; }
+  .fp-main-nav > a,
+  .fp-header-menu > button,
+  .fp-nav-static { min-width: 98px; padding-inline: 14px; }
+  .fp-main-nav > a { min-width: 68px; }
+  .fp-global-search { width: 250px; }
+}
+
+@media (max-width: 1280px) {
+  .fp-site-header-inner { padding-left: 16px; }
+  .fp-brand { flex-basis: 205px; gap: 7px; }
+  .fp-brand img { width: 24px; height: 24px; }
+  .fp-brand strong { font-size: 14px; }
+  .fp-main-nav > a,
+  .fp-header-menu > button,
+  .fp-nav-static { min-width: 82px; padding-inline: 8px; font-size: 14px; }
+  .fp-main-nav > a { min-width: 54px; }
+  .fp-global-search { width: 160px; margin-inline: auto 12px; }
+  .fp-header-link.is-disabled { width: 66px; font-size: 11px; }
+  .fp-register { flex-basis: 74px; font-size: 11px; }
+}
+
+@media (max-width: 1431px) { .fp-section-locator.fp-section-locator { display: none; } }
+
+/* The translated decision-support locator needs a 1560px viewport to remain
+   inside the canvas. Hide only this page's locator below that width so it does
+   not create horizontal overflow. */
+@media (min-width: 769px) and (max-width: 1559px) {
+  .tds-shell > .fp-section-locator.fp-section-locator { display: none; }
+}

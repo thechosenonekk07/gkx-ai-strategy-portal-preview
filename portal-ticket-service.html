@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>门户待办中心原型</title>
+  <link rel="stylesheet" href="portal-extras.css?v=20261013-arco-buttons-1">
+  <style>
+    :root {
+      font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif;
+      color: #1f2937;
+      font-size: 14px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; }
+    body { margin: 0; overflow: hidden; background: #fff; -webkit-font-smoothing: antialiased; }
+    button { font: inherit; cursor: pointer; }
+
+    .overlay {
+      width: 100%;
+      height: 100%;
+    }
+
+    .ticket-popup {
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      display: grid;
+      grid-template-rows: 24px auto minmax(0, 1fr) 32px;
+      gap: 16px;
+      padding: 16px 20px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .ticket-content {
+      margin: 8px 0 0;
+      color: #4e5969;
+      font-size: 12px;
+      line-height: 20px;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .ticket-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 12px;
+      border-top: 1px solid #e5e6eb;
+      padding-top: 12px;
+    }
+
+    .ticket-footer .portal-message-meta { margin-top: 0; }
+    .ticket-number-label,
+    .ticket-number {
+      color: #4e5969;
+      font-size: 14px;
+      line-height: 22px;
+    }
+    .ticket-status.done { color: #52806d; background: #edf6f1; }
+    .ticket-process {
+      min-height: 22px;
+      flex-shrink: 0;
+      padding: 0;
+    }
+
+    /* The iframe is 576px wide on desktop. Keep the Figma desktop layout here;
+       otherwise the shared <=720px message-center rules incorrectly switch it
+       to a mobile card layout inside the desktop drawer. */
+    #portalMessageCenter.portal-ticket-content .portal-list-search {
+      display: flex;
+      gap: 16px;
+    }
+
+    #portalMessageCenter.portal-ticket-content .portal-message-toolbar {
+      gap: 16px;
+    }
+
+    #portalMessageCenter.portal-ticket-content .portal-message-tabs {
+      width: fit-content;
+    }
+
+    #portalMessageCenter.portal-ticket-content .portal-message-tab {
+      flex: 0 0 auto;
+    }
+
+    #portalMessageCenter.portal-ticket-content .portal-message-list-wrap {
+      padding-right: 8px;
+    }
+
+    #portalMessageCenter.portal-ticket-content .portal-message-card,
+    #portalMessageCenter.portal-ticket-content .portal-message-card.is-unread {
+      padding: 16px;
+    }
+
+    #portalMessageCenter.portal-ticket-content .portal-message-card-head {
+      align-items: flex-start;
+      flex-direction: row;
+      gap: 12px;
+    }
+
+    #portalMessageCenter.portal-ticket-content .portal-message-time {
+      order: 0;
+    }
+
+    #portalMessageCenter.portal-ticket-content .portal-message-link.ticket-process {
+      min-height: 22px;
+      padding: 0;
+      line-height: 22px;
+    }
+
+    #portalMessageCenter.portal-ticket-content .ticket-footer .portal-message-meta {
+      margin-top: 0;
+    }
+
+    #portalMessageCenter.portal-ticket-content .portal-list-pagination {
+      flex-wrap: nowrap;
+    }
+
+    @media (max-width: 480px) {
+      .ticket-popup {
+        grid-template-rows: 24px auto minmax(0, 1fr) auto;
+        gap: 12px;
+        padding: 14px 12px;
+      }
+
+      .ticket-footer {
+        align-items: flex-start;
+      }
+    }
+
+  </style>
+</head>
+<body id="portalMessageCenter" class="portal-ticket-content">
+  <main class="overlay" id="ticketOverlay">
+    <section class="ticket-popup" role="dialog" aria-labelledby="ticketServiceTitle">
+      <header class="portal-message-head">
+        <div class="portal-message-head-row">
+          <div class="portal-message-title-wrap">
+            <h1 class="portal-message-title" id="ticketServiceTitle">待办中心</h1>
+          </div>
+          <button class="arco-btn arco-btn-text arco-btn-icon-only portal-message-close close" type="button" title="关闭" aria-label="关闭待办中心">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"></path></svg>
+          </button>
+        </div>
+      </header>
+
+      <div class="portal-message-toolbar">
+        <form class="portal-list-search" id="ticketSearchForm" role="search">
+          <label class="portal-list-search-field">
+            <input id="ticketTitleInput" type="search" aria-label="待办标题" placeholder="请输入标题关键词" autocomplete="off">
+          </label>
+          <button class="arco-btn arco-btn-primary portal-list-search-submit" type="submit">查询</button>
+          <button class="arco-btn arco-btn-secondary portal-list-search-reset" id="ticketSearchReset" type="button">重置</button>
+        </form>
+        <div class="portal-message-tabs arco-tabs arco-tabs-type-card" id="tabs" role="tablist" aria-label="工单状态筛选">
+          <button class="portal-message-tab arco-tabs-tab" type="button" data-status="pending" role="tab" aria-selected="true">待处理 <span class="portal-message-tab-count" data-count="pending">0</span></button>
+          <button class="portal-message-tab arco-tabs-tab" type="button" data-status="done" role="tab" aria-selected="false">已处理 <span class="portal-message-tab-count" data-count="done">0</span></button>
+        </div>
+      </div>
+
+      <div class="portal-message-list-wrap">
+        <div class="portal-message-list" id="ticketList" aria-live="polite"></div>
+      </div>
+      <footer class="portal-list-pagination" aria-label="待办列表分页">
+        <span class="portal-list-pagination-summary" id="ticketPaginationSummary">共计 0 条</span>
+        <div class="portal-list-pagination-controls arco-pagination">
+          <button class="arco-btn arco-btn-secondary arco-btn-icon-only arco-pagination-item" id="ticketPreviousPage" type="button" aria-label="上一页" disabled></button>
+          <span class="portal-list-pagination-page" id="ticketPaginationPage" aria-live="polite">0</span>
+          <button class="arco-btn arco-btn-secondary arco-btn-icon-only arco-pagination-item" id="ticketNextPage" type="button" aria-label="下一页" disabled></button>
+          <span class="portal-list-pagination-size">10条/页</span>
+        </div>
+      </footer>
+    </section>
+  </main>
+
+  <div class="portal-message-toast" id="toast" role="status"></div>
+
+  <script>
+    const tickets = [
+      {
+        id: "TK20260819003",
+        title: "低空经济报告下载后无法打开",
+        desc: "在新型高端智库中生成的低空经济报告下载后提示文件损坏，希望确认是否可以重新生成。",
+        status: "done",
+        time: "2026-08-19 10:22"
+      },
+      {
+        id: "TK20260818002",
+        title: "企业是否符合人工智能专项申报条件",
+        desc: "企业主营业务为工业视觉检测，想确认是否符合 2026 年人工智能专项申报范围。",
+        status: "done",
+        time: "2026-08-18 15:40"
+      },
+      {
+        id: "TK20260817001",
+        title: "无法查看某智库报告详情",
+        desc: "点击量子计算专题报告后提示无权限，需确认是否和机构账号授权有关。",
+        status: "pending",
+        time: "2026-08-17 09:18"
+      }
+    ];
+
+    const statusMap = { pending: "待处理", done: "已处理" };
+    const pageSize = 10;
+    let currentStatus = "pending";
+    let titleQuery = "";
+    let currentPage = 1;
+
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/[&<>"']/g, (character) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#039;"
+      })[character]);
+    }
+
+    function render() {
+      const titleMatches = tickets.filter((ticket) => ticket.title.toLocaleLowerCase().includes(titleQuery.toLocaleLowerCase()));
+      document.querySelectorAll("[data-status]").forEach((button) => {
+        const selected = button.dataset.status === currentStatus;
+        button.classList.toggle("is-active", selected);
+        button.setAttribute("aria-selected", String(selected));
+        button.querySelector("[data-count]").textContent = titleMatches.filter((ticket) => ticket.status === button.dataset.status).length;
+      });
+
+      const list = titleMatches.filter((ticket) => ticket.status === currentStatus);
+      const pageCount = Math.ceil(list.length / pageSize);
+      currentPage = pageCount ? Math.min(Math.max(currentPage, 1), pageCount) : 1;
+      const visibleTickets = list.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+      document.getElementById("ticketList").innerHTML = visibleTickets.length ? visibleTickets.map((ticket) => `
+        <article class="portal-message-card">
+          <div class="portal-message-card-head">
+            <h2 class="portal-message-card-title">${escapeHtml(ticket.title)}</h2>
+            <time class="portal-message-time" datetime="${escapeHtml(ticket.time.replace(" ", "T"))}">${escapeHtml(ticket.time)}</time>
+          </div>
+          <p class="ticket-content">${escapeHtml(ticket.desc)}</p>
+          <div class="ticket-footer">
+            <div class="portal-message-meta">
+              <span class="ticket-number-label">工单编号</span>
+              <span class="ticket-number">${escapeHtml(ticket.id)}</span>
+            </div>
+            ${ticket.status === "pending" ? `
+              <button class="arco-btn arco-btn-text portal-message-link ticket-process" type="button" data-process-id="${escapeHtml(ticket.id)}">
+                去处理 <span class="portal-message-link-arrow" aria-hidden="true"></span>
+              </button>
+            ` : `
+              <button class="arco-btn arco-btn-text portal-message-link ticket-process" type="button" data-view-id="${escapeHtml(ticket.id)}">
+                去查看 <span class="portal-message-link-arrow" aria-hidden="true"></span>
+              </button>
+            `}
+          </div>
+        </article>
+      `).join("") : `<div class="portal-message-empty">${titleQuery ? `暂无匹配标题的${escapeHtml(statusMap[currentStatus])}事项` : `暂无${escapeHtml(statusMap[currentStatus])}事项`}</div>`;
+      document.getElementById("ticketPaginationSummary").textContent = `共计 ${list.length} 条`;
+      document.getElementById("ticketPaginationPage").textContent = `${pageCount ? currentPage : 0}`;
+      document.getElementById("ticketPreviousPage").disabled = pageCount === 0 || currentPage <= 1;
+      document.getElementById("ticketNextPage").disabled = pageCount === 0 || currentPage >= pageCount;
+    }
+
+    function renderFromTop() {
+      render();
+      document.querySelector(".portal-message-list-wrap").scrollTop = 0;
+    }
+
+    document.getElementById("ticketSearchForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      titleQuery = document.getElementById("ticketTitleInput").value.trim();
+      currentPage = 1;
+      renderFromTop();
+    });
+
+    document.getElementById("ticketSearchReset").addEventListener("click", () => {
+      document.getElementById("ticketTitleInput").value = "";
+      titleQuery = "";
+      currentPage = 1;
+      renderFromTop();
+    });
+
+    document.getElementById("tabs").addEventListener("click", (event) => {
+      const button = event.target.closest("[data-status]");
+      if (!button) return;
+      currentStatus = button.dataset.status;
+      currentPage = 1;
+      renderFromTop();
+    });
+
+    document.getElementById("tabs").addEventListener("keydown", (event) => {
+      if (!["ArrowRight", "ArrowLeft", "Home", "End"].includes(event.key)) return;
+      event.preventDefault();
+      const states = Object.keys(statusMap);
+      const index = states.indexOf(currentStatus);
+      const nextIndex = event.key === "Home" ? 0 : event.key === "End" ? states.length - 1
+        : (index + (event.key === "ArrowRight" ? 1 : -1) + states.length) % states.length;
+      currentStatus = states[nextIndex];
+      currentPage = 1;
+      renderFromTop();
+      document.querySelector(`[data-status="${currentStatus}"]`).focus();
+    });
+
+    document.getElementById("ticketPreviousPage").addEventListener("click", () => {
+      currentPage -= 1;
+      renderFromTop();
+    });
+
+    document.getElementById("ticketNextPage").addEventListener("click", () => {
+      currentPage += 1;
+      renderFromTop();
+    });
+
+    document.getElementById("ticketList").addEventListener("click", (event) => {
+      const button = event.target.closest("[data-process-id], [data-view-id]");
+      if (!button) return;
+      // 示例数据尚无来源系统处理或查看地址；点击不改变工单状态。
+      showToast(button.hasAttribute("data-view-id") ? "暂未配置该工单的查看地址" : "暂未配置该工单的处理地址");
+    });
+
+    function showToast(text) {
+      const toast = document.getElementById("toast");
+      toast.textContent = text;
+      toast.classList.add("is-visible");
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => toast.classList.remove("is-visible"), 2500);
+    }
+
+    function requestClose() {
+      if (window.parent !== window) {
+        const parentOrigin = window.location.origin === "null" ? "*" : window.location.origin;
+        window.parent.postMessage({ type: "gkx-ticket-service-close" }, parentOrigin);
+      } else {
+        showToast("关闭待办中心");
+      }
+    }
+
+    document.querySelector(".close").addEventListener("click", requestClose);
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") requestClose();
+    });
+
+    render();
+  </script>
+</body>
+</html>
