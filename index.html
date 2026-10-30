@@ -5251,8 +5251,8 @@
           items: [
             { label: "科技专题服务系统", url: "https://skxdemo.unicomcn.tech:30999/development/search", action: "embed", hideEmbeddedHeader: true },
             { label: "科技信息展示系统", url: "https://skxrules.unicomcn.tech:30999/", action: "embed", hideEmbeddedHeader: true },
-            { label: "AI 分析与智能分发工作台", url: "apps/ai-distribution/index.html", action: "embed", embedTitle: "AI 分析与智能分发工作台" },
-            { label: "语音增强与适配工作台", url: "apps/voice-enhancement/index.html", action: "embed", embedTitle: "语音增强与适配工作台" },
+            { label: "AI 分析与智能分发工作台", url: "apps/ai-distribution/index.html", action: "embed", embedTitle: "AI 分析与智能分发工作台", hideEmbeddedToolbar: true },
+            { label: "语音增强与适配工作台", url: "apps/voice-enhancement/index.html", action: "embed", embedTitle: "语音增强与适配工作台", hideEmbeddedToolbar: true },
             { label: "管理后台", url: "apps/portal-admin/dist/index.html?v=20260826-user-data-api", action: "embed", embedTitle: "后台管理一", hideEmbeddedToolbar: true, hideEmbeddedHeader: true, headerCropPx: 64 },
             { label: "文档中心", url: "document-center.html?v=20260909-doc-cleanup", action: "embed", embedTitle: "文档中心", hideEmbeddedToolbar: true },
             { label: "示例系统" },
@@ -6288,6 +6288,20 @@
         try { sessionStorage.removeItem(PORTAL_VIEW_STATE_KEY); } catch (error) { /* storage may be unavailable */ }
       }
 
+      // Current navigation policy also applies to previously saved iframe states.
+      function normalizeEmbeddedToolbar(options) {
+        if (!options.iframeUrl) return options;
+        try {
+          const target = new URL(options.iframeUrl, window.location.href);
+          const configured = NAVIGATION.flatMap((group) => group.items || []).find((item) => {
+            if (item.action !== "embed" || !item.url || typeof item.hideEmbeddedToolbar !== "boolean") return false;
+            const route = new URL(item.url, window.location.href);
+            return route.origin === target.origin && route.pathname === target.pathname;
+          });
+          return configured ? { ...options, hideEmbeddedToolbar: configured.hideEmbeddedToolbar } : options;
+        } catch (error) { return options; }
+      }
+
       function restorePortalViewState() {
         let state = null;
         try { state = JSON.parse(sessionStorage.getItem(PORTAL_VIEW_STATE_KEY) || "null"); } catch (error) { /* ignore invalid state */ }
@@ -6296,6 +6310,7 @@
           clearPortalViewState();
           return false;
         }
+        state = normalizeEmbeddedToolbar(state);
         activePortalViewState = state;
         showSurface("iframe", { ...state, skipViewStatePersistence: true });
         return true;
@@ -7973,6 +7988,7 @@
       }
 
       function showSurface(name, options = {}) {
+        if (name === "iframe") options = normalizeEmbeddedToolbar(options);
         if (name !== "qa") window.clearTimeout(qaAnswerTimer);
         if (name !== "home" && mgVoiceListening) setHeroVoiceListening(false);
         Object.entries(SURFACES).forEach(([key, node]) => {
