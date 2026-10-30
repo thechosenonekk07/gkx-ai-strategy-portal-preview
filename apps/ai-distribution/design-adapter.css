@@ -117,9 +117,6 @@ html.portal-embedded .topbar { display: none; }
 
 .app-strip strong { min-width: 0; font-size: 14px; line-height: 22px; font-weight: 500; }
 .strip-right { display: flex; align-items: center; flex-shrink: 0; gap: 12px; color: var(--text2); font-size: 12px; line-height: 20px; }
-.review-toggle { min-height: 28px; padding: 0 10px; border: 1px solid transparent; border-radius: 4px; background: rgba(255, 255, 255, .64); color: var(--text2); font-size: 12px; line-height: 20px; }
-.review-toggle:hover { color: var(--brand); background: #fff; }
-.review-toggle[aria-pressed="true"] { border-color: var(--brand); background: var(--brand); color: #fff; }
 
 .sidebar {
   position: relative;
@@ -204,10 +201,8 @@ html.portal-embedded .topbar { display: none; }
 .page-head > div { min-width: 0; }
 .page-head h1 { margin: 0 0 4px; color: #1d2129; font-size: 18px; line-height: 28px; font-weight: 500; overflow-wrap: anywhere; }
 .page-head p,
-.source-id,
 .subtle { color: var(--text3); font-size: 12px; line-height: 20px; }
 .page-head p { margin: 0; }
-.source-id { flex-shrink: 0; padding-top: 4px; }
 .section { margin-top: 16px; }
 .section-title { margin: 0 0 12px; color: #1d2129; font-size: 16px; line-height: 24px; font-weight: 500; }
 .row { gap: 8px; }
@@ -216,7 +211,6 @@ html.portal-embedded .topbar { display: none; }
 .tag-text { color: var(--text2); font-size: 12px; line-height: 20px; }
 
 .btn,
-.review-toggle,
 .top-tool,
 .link,
 .nav-item,
@@ -451,13 +445,6 @@ td .checkbox { vertical-align: middle; }
 .heatmap .h2 { background: #bedaff; color: #1d2129; }
 .heatmap .h3 { background: #94bfff; color: #1d2129; }
 .heatmap .h4 { background: #4080ff; color: #fff; }
-
-.review-panel { margin: 0 0 24px; padding: 16px; border: 0; border-radius: 4px; background: var(--module); }
-.review-panel h2 { margin: 0 0 16px; color: #1d2129; font-size: 16px; line-height: 24px; font-weight: 500; }
-.review-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 24px; }
-.review-grid strong { color: #1d2129; font-size: 14px; line-height: 22px; font-weight: 500; }
-.review-grid p { margin: 4px 0 0; color: var(--text2); font-size: 14px; line-height: 22px; }
-.review-label { margin-bottom: 4px; color: var(--text3); font-size: 12px; line-height: 20px; }
 .bell { display: inline-flex; align-items: center; min-height: 32px; gap: 8px; padding: 4px 12px; border: 1px solid transparent; border-radius: 4px; background: var(--subtle); color: #1d2129; font-size: 14px; line-height: 22px; }
 .bell:hover { background: var(--border); }
 .bell .red-dot { width: 6px; height: 6px; background: var(--red); }
@@ -528,8 +515,7 @@ td .checkbox { vertical-align: middle; }
   .page { padding: 16px; }
   .nav-item { padding: 8px 12px; font-size: 14px; text-align: left; }
   .group-name { display: flex; }
-  .source-grid,
-  .review-grid { grid-template-columns: 1fr; }
+  .source-grid { grid-template-columns: 1fr; }
   .condition { grid-template-columns: 56px minmax(0, 1fr) 88px minmax(0, 1fr); gap: 8px; }
   .condition select,
   .condition input { padding-left: 8px; }
@@ -550,7 +536,6 @@ td .checkbox { vertical-align: middle; }
   .app-strip strong { max-width: 65%; font-size: 13px; line-height: 20px; }
   .strip-right { min-width: 0; gap: 8px; font-size: 11px; line-height: 18px; text-align: right; }
   html.portal-embedded .strip-right { gap: 8px; }
-  .review-toggle { flex-shrink: 0; padding: 0 8px; white-space: nowrap; }
   .sidebar { grid-column: 1; grid-row: 3; z-index: 20; height: 48px; min-height: 48px; padding: 0 8px; overflow: visible; border: 0; background: transparent; white-space: normal; scrollbar-gutter: auto; }
   #navigation { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; min-width: 0; height: 48px; overflow: visible; }
   .group { display: block; position: static; min-width: 0; margin: 0; }
@@ -564,11 +549,9 @@ td .checkbox { vertical-align: middle; }
   .page { padding: 16px; border-radius: 4px; }
   .page-head { display: block; padding-bottom: 16px; }
   .page-head h1 { font-size: 18px; line-height: 28px; }
-  .source-id { display: block; margin-top: 8px; padding-top: 0; white-space: normal; }
   .form-grid,
   .source-grid,
-  .split,
-  .review-grid { grid-template-columns: 1fr; }
+  .split { grid-template-columns: 1fr; }
   .filterbar { align-items: stretch; gap: 8px; }
   .filterbar .control { flex: 1 1 140px; min-width: 0; }
   .control.wide { min-width: 0; }
@@ -643,15 +626,7 @@ html.portal-embedded .shell.has-breadcrumb-layout { grid-template-rows: 0 minmax
 .shell.has-breadcrumb-layout .workbench-breadcrumb li[aria-current="page"] { color: #1d2129; }
 .shell.has-breadcrumb-layout .main > .page { flex: 1 0 auto; width: 100%; min-width: 0; min-height: 0; margin: 0; }
 .shell.has-breadcrumb-layout .page-head { display: flex; align-items: flex-start; flex-wrap: wrap; column-gap: 16px; row-gap: 8px; }
-.shell.has-breadcrumb-layout .page-head > div:not(.page-actions):not(.source-id) { flex: 1 1 0; min-width: 0; }
-.shell.has-breadcrumb-layout .page-head > .page-actions { display: flex; align-items: center; justify-content: flex-end; flex: 0 0 auto; order: 2; min-width: 0; margin: 0 0 0 auto; padding: 0; gap: 8px; }
-.shell.has-breadcrumb-layout .page-head > .source-id { flex: 0 0 100%; order: 3; width: 100%; min-width: 0; margin: 0; padding: 0; text-align: left; white-space: normal; }
-.shell.has-breadcrumb-layout .page-actions .review-toggle { position: static; display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto; min-height: 32px; height: 32px; margin: 0; padding: 0 16px; border: 1px solid var(--border); border-radius: 4px; background: #fff; color: var(--text2); font-size: 14px; line-height: 22px; font-weight: 400; white-space: nowrap; }
-.shell.has-breadcrumb-layout .page-actions .review-toggle:hover { border-color: #c9cdd4; background: #fff; color: #1d2129; }
-.shell.has-breadcrumb-layout .page-actions .review-toggle:active { border-color: var(--hover); color: var(--brand); }
-.shell.has-breadcrumb-layout .page-actions .review-toggle[aria-pressed="true"],
-.shell.has-breadcrumb-layout .page-actions .review-toggle[aria-pressed="true"]:hover { border-color: #bedaff; background: var(--brand-light); color: var(--brand); }
-.shell.has-breadcrumb-layout .page-actions .review-toggle:disabled { border-color: var(--border); background: var(--module); color: var(--disabled); cursor: not-allowed; }
+.shell.has-breadcrumb-layout .page-head > div:first-child { flex: 1 1 0; min-width: 0; }
 
 @media (max-width: 767px) {
   .shell.has-breadcrumb-layout { grid-template-rows: 44px 48px minmax(0, 1fr); }
@@ -659,5 +634,4 @@ html.portal-embedded .shell.has-breadcrumb-layout { grid-template-rows: 0 minmax
   .shell.has-breadcrumb-layout > .sidebar { grid-row: 2; }
   .shell.has-breadcrumb-layout > .main { grid-column: 1; grid-row: 3; }
   .shell.has-breadcrumb-layout .page-head { display: flex; align-items: flex-start; flex-wrap: wrap; column-gap: 12px; row-gap: 8px; }
-  .shell.has-breadcrumb-layout .page-actions .review-toggle { padding: 0 12px; }
 }

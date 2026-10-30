@@ -11,7 +11,6 @@
   let lastTrigger = null;
   let opened = false;
 
-  const reviewToggle = document.getElementById('reviewToggle');
   const breadcrumbBar = document.querySelector('.app-strip');
   const moduleName = breadcrumbBar.querySelector('strong').textContent;
   const breadcrumb = document.createElement('nav');
@@ -20,7 +19,6 @@
   breadcrumb.innerHTML = '<ol><li class="breadcrumb-module"></li><li aria-current="page"></li></ol>';
   breadcrumb.querySelector('.breadcrumb-module').textContent = moduleName;
   breadcrumbBar.querySelector('strong').remove();
-  breadcrumbBar.querySelector('.strip-right').hidden = true;
   breadcrumbBar.prepend(breadcrumb);
   breadcrumbBar.classList.add('workbench-breadcrumb-bar');
   document.querySelector('.main').prepend(breadcrumbBar);
@@ -28,18 +26,9 @@
 
   function syncPageChrome() {
     breadcrumb.querySelector('[aria-current="page"]').textContent = content.querySelector('h1')?.textContent || '';
-    const header = content.querySelector('.page-head');
-    if (header) {
-      let actions = header.querySelector('.page-actions');
-      if (!actions) { actions = document.createElement('div'); actions.className = 'page-actions'; header.append(actions); }
-      if (reviewToggle.parentElement !== actions) actions.append(reviewToggle);
-    }
-    reviewToggle.textContent = '需求评审';
-    reviewToggle.title = reviewToggle.getAttribute('aria-pressed') === 'true' ? '收起需求评审' : '展开需求评审';
   }
   const baseOpenPage = openPage;
   openPage = function (...args) { const result = baseOpenPage(...args); syncPageChrome(); return result; };
-  reviewToggle.addEventListener('click', syncPageChrome);
   syncPageChrome();
 
   panel.setAttribute('role', 'dialog');

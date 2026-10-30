@@ -1,22 +1,15 @@
-/* Presentation and interaction lifecycle for the existing voice prototype.
- * State remains in this preview session; no microphone, API or persistence is added.
- */
+/* Presentation and keyboard lifecycle for the voice workspace. */
 (() => {
   const app = document.querySelector('.shell');
   const content = document.getElementById('page');
   const menu = document.getElementById('navigation');
-  const review = document.getElementById('reviewDrawer');
   const mask = document.getElementById('modalMask');
   const dialog = document.getElementById('modal');
-  const reviewToggle = document.getElementById('reviewToggle');
   const mobile = matchMedia('(max-width: 767px)');
-  const overlayLayout = matchMedia('(max-width: 1120px)');
   const collapsed = new Map();
   let lastTrigger = null;
   let modalWasOpen = false;
-  let overlayWasOpen = false;
   let modalReturn = null;
-  let reviewReturn = null;
 
   const breadcrumbBar = document.querySelector('.app-strip');
   const moduleName = breadcrumbBar.querySelector('strong').textContent;
@@ -33,27 +26,11 @@
 
   function syncPageChrome() {
     breadcrumb.querySelector('[aria-current="page"]').textContent = content.querySelector('h1')?.textContent || '';
-    const header = content.querySelector('.page-head');
-    if (header) {
-      let actions = header.querySelector('.page-actions');
-      if (!actions) { actions = document.createElement('div'); actions.className = 'page-actions'; header.append(actions); }
-      if (reviewToggle.parentElement !== actions) actions.append(reviewToggle);
-    }
-    reviewToggle.textContent = '需求评审';
-    reviewToggle.title = reviewToggle.getAttribute('aria-pressed') === 'true' ? '收起需求评审' : '展开需求评审';
   }
   const baseRenderPage = renderPage;
   renderPage = function (...args) { const result = baseRenderPage(...args); syncPageChrome(); return result; };
-  const baseSetReviewOpen = setReviewOpen;
-  setReviewOpen = function (open) { baseSetReviewOpen(open); syncPageChrome(); };
   syncPageChrome();
-  const reviewMask = document.createElement('div');
-  reviewMask.className = 'review-mask';
-  reviewMask.setAttribute('aria-hidden', 'true');
-  app.after(reviewMask);
-  reviewMask.addEventListener('click', () => setReviewOpen(false));
   dialog.tabIndex = -1;
-  review.tabIndex = -1;
 
   document.addEventListener('click', event => {
     if (!dialog.contains(event.target)) lastTrigger = event.target.closest('button, input, select, textarea, a, [tabindex]');
@@ -63,34 +40,18 @@
     .filter(el => !el.disabled && !el.hidden && !el.closest('[inert]') && el.getClientRects().length);
   const restoreFocus = target => {
     const replacement = target?.id ? document.getElementById(target.id) : null;
-    (target?.isConnected ? target : replacement || menu.querySelector('[aria-current="page"]') || reviewToggle)?.focus({ preventScroll: true });
+    (target?.isConnected ? target : replacement || menu.querySelector('[aria-current="page"]') || content.querySelector('h1'))?.focus({ preventScroll: true });
   };
 
   function syncLayers() {
     const modalOpen = mask.classList.contains('open');
-    const reviewOpen = app.classList.contains('review-open');
-    const overlayOpen = reviewOpen && overlayLayout.matches;
     app.inert = modalOpen;
-    for (const child of app.children) if (child !== review) child.inert = overlayOpen;
     dialog.inert = !modalOpen;
     dialog.setAttribute('aria-hidden', String(!modalOpen));
     mask.setAttribute('aria-hidden', String(!modalOpen));
     if (modalOpen) dialog.setAttribute('aria-modal', 'true');
     else dialog.removeAttribute('aria-modal');
-    review.inert = !reviewOpen;
-    review.setAttribute('aria-hidden', String(!reviewOpen));
-    review.setAttribute('role', overlayOpen ? 'dialog' : 'region');
-    if (overlayOpen) review.setAttribute('aria-modal', 'true');
-    else review.removeAttribute('aria-modal');
-    reviewMask.classList.toggle('open', overlayOpen);
 
-    if (overlayOpen && !overlayWasOpen) {
-      reviewReturn = lastTrigger || reviewToggle;
-      (review.querySelector('.review-close') || review).focus({ preventScroll: true });
-    } else if (!overlayOpen && overlayWasOpen && !modalOpen) {
-      restoreFocus(reviewReturn);
-      reviewReturn = null;
-    }
     if (modalOpen && !modalWasOpen) {
       modalReturn = lastTrigger || document.activeElement;
       const initial = dialog.querySelector('input:not(:disabled), textarea:not(:disabled), select:not(:disabled)')
@@ -101,19 +62,16 @@
       modalReturn = null;
     }
     modalWasOpen = modalOpen;
-    overlayWasOpen = overlayOpen;
   }
   new MutationObserver(syncLayers).observe(mask, { attributes: true, attributeFilter: ['class'] });
-  new MutationObserver(syncLayers).observe(app, { attributes: true, attributeFilter: ['class'] });
   syncLayers();
 
   document.addEventListener('keydown', event => {
     // Native confirmation dialogs provide their own focus handling.
     if (document.querySelector('.confirm-dialog[open]')) return;
-    const activeLayer = modalWasOpen ? dialog : overlayWasOpen ? review : null;
+    const activeLayer = modalWasOpen ? dialog : null;
     if (event.key === 'Escape') {
       if (modalWasOpen) { event.preventDefault(); event.stopPropagation(); closeModal(); }
-      else if (app.classList.contains('review-open')) { event.preventDefault(); setReviewOpen(false); }
       else if (mobile.matches) closeMobileMenus();
     }
     if (event.key === 'Tab' && activeLayer) {
@@ -165,19 +123,6 @@
   });
   document.addEventListener('click', event => { if (mobile.matches && !event.target.closest('.sidebar')) closeMobileMenus(); });
   mobile.addEventListener('change', decorateNav);
-  overlayLayout.addEventListener('change', syncLayers);
-
-  function updateOverlayTop() {
-    const bar = app.querySelector(mobile.matches ? '.sidebar' : '.app-strip');
-    const top = `${Math.round(bar.getBoundingClientRect().bottom + (mobile.matches ? 0 : 16))}px`;
-    app.style.setProperty('--review-overlay-top', top);
-    reviewMask.style.setProperty('--review-overlay-top', top);
-  }
-  const sizing = new ResizeObserver(updateOverlayTop);
-  sizing.observe(app.querySelector('.app-strip'));
-  sizing.observe(app.querySelector('.sidebar'));
-  window.addEventListener('resize', updateOverlayTop);
-  updateOverlayTop();
 
   function highlightSelection() {
     content.querySelectorAll('.para').forEach((paragraph, index) => {
@@ -220,10 +165,6 @@
   content.addEventListener('change', event => {
     if (event.target.id === 'templateSelect' && event.target.value) scheduleAutoSave();
   });
-  review.addEventListener('click', event => {
-    if (overlayLayout.matches && event.target.closest('[data-action="locatePrototype"]')) setReviewOpen(false);
-  });
-
   const baseHandleAction = handleAction;
   handleAction = async function (button) {
     const before = transcriptionParts.map(part => part.text).join('\n');
