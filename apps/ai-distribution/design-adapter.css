@@ -290,14 +290,9 @@ html.portal-embedded .topbar { display: none; }
 .control:focus,
 .condition select:focus,
 .condition input:focus { outline: 0; border-color: var(--hover); background-color: #fff; box-shadow: none; }
-.control:focus-visible,
-.condition select:focus-visible,
-.condition input:focus-visible { outline: 2px solid #9bc2ff; outline-offset: 2px; }
 .control.wide { min-width: min(260px, 100%); }
 .control.full { width: 100%; }
-textarea.control { min-height: 96px; height: 96px; padding: 8px 12px; resize: vertical; line-height: 22px; }
-select.control,
-.condition select { -webkit-appearance: none; appearance: none; padding-right: 32px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='m4 6 4 4 4-4' stroke='%2386909C' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-position: right 10px center; background-size: 14px 14px; background-repeat: no-repeat; cursor: pointer; }
+textarea.control { min-height: 80px; height: 80px; padding: 8px 12px; resize: vertical; line-height: 22px; }
 input[type="time"].control { -webkit-appearance: none; appearance: none; min-width: 0; }
 input[type="time"]::-webkit-calendar-picker-indicator { padding: 0; opacity: .6; cursor: pointer; }
 .control:disabled,
@@ -517,9 +512,6 @@ td .checkbox { vertical-align: middle; }
   .group-name { display: flex; }
   .source-grid { grid-template-columns: 1fr; }
   .condition { grid-template-columns: 56px minmax(0, 1fr) 88px minmax(0, 1fr); gap: 8px; }
-  .condition select,
-  .condition input { padding-left: 8px; }
-  .condition select { padding-right: 24px; background-position: right 6px center; }
   .metric { padding: 0 16px; }
   .topology-grid { grid-template-columns: minmax(0, 1fr) 112px minmax(0, 1fr); gap: 12px 8px; }
   .top-node { padding: 10px; }
@@ -634,4 +626,40 @@ html.portal-embedded .shell.has-breadcrumb-layout { grid-template-rows: 0 minmax
   .shell.has-breadcrumb-layout > .sidebar { grid-row: 2; }
   .shell.has-breadcrumb-layout > .main { grid-column: 1; grid-row: 3; }
   .shell.has-breadcrumb-layout .page-head { display: flex; align-items: flex-start; flex-wrap: wrap; column-gap: 12px; row-gap: 8px; }
+}
+
+/* Shared controls retain the original page grid and flex sizing. */
+.gkx-select.full,
+.gkx-text-input.full,
+.field > .gkx-select,
+.field > .gkx-text-input,
+.source-grid .gkx-select,
+.source-grid .gkx-text-input,
+.condition > .gkx-select,
+.condition > .gkx-text-input { width: 100%; min-width: 0; }
+.row > .gkx-select,
+.row > .gkx-text-input,
+.filterbar > .gkx-select,
+.filterbar > .gkx-text-input { flex: 0 1 auto; width: auto; min-width: 140px; }
+.row > .gkx-select.full,
+.row > .gkx-text-input.full { width: 100%; }
+.row > .gkx-select:has(> select:is([aria-label="组内关系"], [aria-label="组间关系"])) { flex: 0 0 64px; width: 64px; min-width: 64px; }
+.gkx-select.wide,
+.gkx-text-input.wide { min-width: min(260px, 100%); }
+.condition > .gkx-select,
+.condition > .gkx-text-input { align-self: center; }
+.condition .gkx-text-input > .gkx-field { width: 100%; }
+.condition > .gkx-field-error { order: 1; grid-column: 1 / -1; margin-top: -8px; }
+.row > label > .gkx-select,
+.row > label > .gkx-text-input { width: auto; min-width: 140px; }
+td > .gkx-select,
+td > .gkx-text-input { width: 100%; min-width: 128px; }
+.slider.gkx-range { flex: 1 1 0; width: 100%; margin: 14px 0; }
+@media (max-width: 767px) {
+  .filterbar > .gkx-select,
+  .filterbar > .gkx-text-input { flex: 1 1 140px; width: auto; min-width: 0; }
+  .gkx-select.wide,
+  .gkx-text-input.wide { min-width: 0; }
+  .condition > .gkx-text-input,
+  .condition > .gkx-field-error { grid-column: 1 / -1; }
 }

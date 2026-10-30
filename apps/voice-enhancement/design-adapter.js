@@ -6,6 +6,11 @@
   const mask = document.getElementById('modalMask');
   const dialog = document.getElementById('modal');
   const mobile = matchMedia('(max-width: 767px)');
+  const fileActions = {
+    audioFile: 'uploadAudio',
+    ruleFile: 'importRules',
+    customTemplate: 'uploadTemplate',
+  };
   const collapsed = new Map();
   let lastTrigger = null;
   let modalWasOpen = false;
@@ -69,6 +74,7 @@
   document.addEventListener('keydown', event => {
     // Native confirmation dialogs provide their own focus handling.
     if (document.querySelector('.confirm-dialog[open]')) return;
+    if (event.key === 'Escape' && document.querySelector('.gkx-select-trigger[aria-expanded="true"]')) return;
     const activeLayer = modalWasOpen ? dialog : null;
     if (event.key === 'Escape') {
       if (modalWasOpen) { event.preventDefault(); event.stopPropagation(); closeModal(); }
@@ -132,8 +138,40 @@
       if (label) label.textContent = selected ? '当前编辑段' : '已识别';
     });
   }
+  function updateFileFeedback(input) {
+    const feedback = content.querySelector(`[data-file-feedback="${input.id}"]`);
+    if (!feedback) return;
+    const filename = input.files?.[0]?.name;
+    if (!filename) {
+      if (feedback.childNodes.length) feedback.replaceChildren();
+      delete feedback.dataset.filename;
+      feedback.hidden = true;
+      return;
+    }
+    if (!feedback.hidden && feedback.dataset.filename === filename) return;
+    const name = document.createElement('span');
+    name.className = 'gkx-file-name';
+    name.setAttribute('role', 'status');
+    name.textContent = `已选择：${filename}`;
+    const clear = document.createElement('button');
+    clear.type = 'button';
+    clear.className = 'link gkx-file-clear';
+    clear.dataset.fileClear = input.id;
+    clear.setAttribute('aria-label', `清除已选文件：${filename}`);
+    clear.textContent = '清除';
+    feedback.replaceChildren(name, clear);
+    feedback.dataset.filename = filename;
+    feedback.hidden = false;
+  }
+  function syncFileFeedback() {
+    for (const id of Object.keys(fileActions)) {
+      const input = document.getElementById(id);
+      if (input) updateFileFeedback(input);
+    }
+  }
   function polishPage() {
     syncPageChrome();
+    syncFileFeedback();
     const heading = content.querySelector('h1');
     if (heading) heading.tabIndex = -1;
     content.querySelectorAll('input[type="range"]').forEach(range => {
@@ -155,6 +193,16 @@
   polishPage();
   new MutationObserver(polishPage).observe(content, { childList: true });
   content.addEventListener('click', event => {
+    const clear = event.target.closest('[data-file-clear]');
+    if (clear) {
+      const input = document.getElementById(clear.dataset.fileClear);
+      if (input) {
+        input.value = '';
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+        content.querySelector(`[data-action="${fileActions[input.id]}"]`)?.focus({ preventScroll: true });
+      }
+      return;
+    }
     if (event.target.closest('.para')) highlightSelection();
     if (event.target.closest('[data-action="locateAudio"]')) polishPage();
   });
@@ -163,7 +211,13 @@
     if (version && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); version.click(); }
   });
   content.addEventListener('change', event => {
+    if (Object.hasOwn(fileActions, event.target.id)) updateFileFeedback(event.target);
     if (event.target.id === 'templateSelect' && event.target.value) scheduleAutoSave();
+  });
+  dialog.addEventListener('input', event => {
+    if (event.target.id === 'ruleContent' || event.target.id === 'speakerName') {
+      window.GKXControls?.clearInvalid(event.target);
+    }
   });
   const baseHandleAction = handleAction;
   handleAction = async function (button) {
