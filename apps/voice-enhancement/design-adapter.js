@@ -153,6 +153,7 @@
     name.className = 'gkx-file-name';
     name.setAttribute('role', 'status');
     name.textContent = `已选择：${filename}`;
+    name.title = filename;
     const clear = document.createElement('button');
     clear.type = 'button';
     clear.className = 'link gkx-file-clear';
@@ -234,7 +235,16 @@
   confirmation.setAttribute('aria-describedby', 'versionConfirmMessage');
   confirmation.innerHTML = '<form method="dialog"><header class="modal-head"><h2 id="versionConfirmTitle">恢复历史版本</h2><button class="modal-close" value="cancel" aria-label="关闭确认框">×</button></header><div class="modal-body"><p id="versionConfirmMessage"></p><p class="subtle">恢复前将保留当前稿件快照；所选版本将替换当前内容。</p></div><footer class="modal-foot"><button class="btn" value="cancel" autofocus>取消</button><button class="btn primary" value="confirm">确认恢复</button></footer></form>';
   document.body.append(confirmation);
-  confirmation.addEventListener('click', event => { if (event.target === confirmation) confirmation.close('cancel'); });
+  function closeConfirmation(value = 'cancel') {
+    if (window.GKXSurface?.closeDialog) return window.GKXSurface.closeDialog(confirmation, value);
+    confirmation.close(value);
+  }
+  confirmation.addEventListener('submit', event => {
+    event.preventDefault();
+    closeConfirmation(event.submitter?.value || 'cancel');
+  });
+  confirmation.addEventListener('cancel', event => { event.preventDefault(); closeConfirmation('cancel'); });
+  confirmation.addEventListener('click', event => { if (event.target === confirmation) closeConfirmation('cancel'); });
   window.confirmAction = message => new Promise(resolve => {
     confirmation.querySelector('#versionConfirmMessage').textContent = message;
     confirmation.returnValue = 'cancel';

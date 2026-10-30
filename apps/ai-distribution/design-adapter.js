@@ -46,7 +46,21 @@
   const focusable = () => [...panel.querySelectorAll('button, input, select, textarea, a[href], [tabindex="0"]')]
     .filter(el => !el.disabled && !el.hidden && el.getClientRects().length);
 
+  function syncDrawerLayout() {
+    const heading = panel.querySelector(':scope > .drawer-head');
+    if (!heading || panel.querySelector(':scope > .drawer-body')) return;
+    const actions = panel.querySelector('.drawer-actions');
+    actions?.remove();
+    const body = document.createElement('div');
+    body.className = 'drawer-body';
+    [...panel.childNodes].filter(node => node !== heading).forEach(node => body.append(node));
+    panel.append(body);
+    if (actions) panel.append(actions);
+    window.GKXSurface?.polish(panel);
+  }
+
   function syncDrawer() {
+    syncDrawerLayout();
     const isOpen = panel.classList.contains('open');
     const heading = panel.querySelector('h2');
     if (heading) {
@@ -61,7 +75,8 @@
     if (isOpen) {
       returnTarget = lastTrigger || document.activeElement;
       panel.setAttribute('aria-modal', 'true');
-      panel.scrollTop = 0;
+      const body = panel.querySelector('.drawer-body');
+      if (body) body.scrollTop = 0;
       const initial = panel.querySelector('input:not(:disabled), textarea:not(:disabled), select:not(:disabled)')
         || panel.querySelector('.close') || panel;
       initial.focus({ preventScroll: true });
@@ -140,13 +155,26 @@
   confirmation.className = 'confirm-dialog';
   confirmation.setAttribute('aria-labelledby', 'confirmTitle');
   confirmation.setAttribute('aria-describedby', 'confirmDescription');
-  confirmation.innerHTML = '<form method="dialog"><header class="confirm-head"><h2 id="confirmTitle">撤回情报</h2><button class="close" value="cancel" aria-label="关闭对话框">×</button></header><div class="confirm-body"><p id="confirmDescription"></p><p class="subtle">撤回后，该情报将标记为“已撤回”。</p></div><footer class="confirm-actions"><button class="btn" value="cancel" autofocus>取消</button><button class="btn primary" value="confirm">确认撤回</button></footer></form>';
+  confirmation.innerHTML = '<form method="dialog"><header class="confirm-head"><h2 id="confirmTitle">撤回情报</h2><button class="close" value="cancel" aria-label="关闭对话框">×</button></header><div class="confirm-body"><p id="confirmDescription"></p><p class="subtle">撤回后，该情报将标记为“已撤回”。</p></div><footer class="confirm-actions"><button class="btn" value="cancel" autofocus>取消</button><button class="btn danger" value="confirm">确认撤回</button></footer></form>';
   document.body.append(confirmation);
-  confirmation.addEventListener('click', event => { if (event.target === confirmation) confirmation.close('cancel'); });
+  const closeConfirmation = value => {
+    if (window.GKXSurface?.closeDialog) window.GKXSurface.closeDialog(confirmation, value);
+    else confirmation.close(value);
+  };
+  confirmation.addEventListener('submit', event => {
+    event.preventDefault();
+    closeConfirmation(event.submitter?.value || 'cancel');
+  });
+  confirmation.addEventListener('cancel', event => {
+    event.preventDefault();
+    closeConfirmation('cancel');
+  });
+  confirmation.addEventListener('click', event => { if (event.target === confirmation) closeConfirmation('cancel'); });
   window.confirmAction = message => new Promise(resolve => {
     confirmation.querySelector('#confirmDescription').textContent = message;
     confirmation.returnValue = 'cancel';
     confirmation.addEventListener('close', () => resolve(confirmation.returnValue === 'confirm'), { once: true });
     confirmation.showModal();
+    window.GKXSurface?.polish(confirmation);
   });
 })();

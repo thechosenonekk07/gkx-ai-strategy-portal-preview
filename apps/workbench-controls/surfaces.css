@@ -1,0 +1,194 @@
+/* Geometry: Figma 1072:29397, 87:1288, 98:1891 and 107:1801.
+ * Motion durations are project adaptations; the inspected Figma nodes have no motion data. */
+html[data-workbench] {
+  --sidebar-width: 200px;
+  --gkx-surface-enter: 180ms;
+  --gkx-surface-exit: 160ms;
+  --gkx-surface-mask: 150ms;
+}
+html[data-workbench] .shell.has-breadcrumb-layout { grid-template-columns: 200px minmax(0, 1fr); }
+html[data-workbench] .sidebar { padding: 16px; scrollbar-gutter: auto; scrollbar-width: none; }
+html[data-workbench] .sidebar::-webkit-scrollbar { width: 0; height: 0; }
+html[data-workbench] #navigation { width: 168px; min-width: 0; }
+html[data-workbench] .nav-item,
+html[data-workbench] .group-name { width: 168px; min-height: 40px; height: 40px; }
+html[data-workbench] .nav-item { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+html[data-workbench] .group-label { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+html[data-workbench] .main { margin: 16px 16px 16px 0; padding: 16px; border-radius: 12px; }
+html[data-workbench] .page { padding: 16px; border-radius: 8px; }
+html[data-workbench] .shell.has-breadcrumb-layout .workbench-breadcrumb li { color: #86909c; font-size: 12px; line-height: 20px; font-weight: 400; }
+html[data-workbench] .shell.has-breadcrumb-layout .workbench-breadcrumb li[aria-current="page"] { color: #4e5969; font-weight: 500; }
+
+/* Keep the source heading and description available to assistive technology and page sync. */
+html[data-workbench] .shell.has-breadcrumb-layout .page-head {
+  position: absolute;
+  display: block;
+  width: 1px;
+  min-width: 0;
+  height: 1px;
+  min-height: 0;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+html[data-workbench] .page > .page-head + .section { margin-top: 0; }
+html[data-workbench] .page strong,
+html[data-workbench] .drawer strong,
+html[data-workbench] .modal strong,
+html[data-workbench] .confirm-dialog strong { font-weight: 500; }
+
+html[data-workbench] .table-wrap th { height: 40px; padding: 8px 16px; background: #f7f8fa; color: #4e5969; font-weight: 500; }
+html[data-workbench] .table-wrap td { height: 40px; padding: 8px 16px; }
+html[data-workbench] .table-wrap tr:has(.gkx-select, .gkx-text-input, .gkx-field, .btn) > td { padding-block: 3px; }
+html[data-workbench] .table-wrap td:has(> .gkx-tag) { padding-block: 7px; }
+html[data-workbench] .table-wrap tr:has(.gkx-select, .gkx-text-input, .gkx-field, .btn) > td:has(> .gkx-tag) { padding-block: 3px; }
+html[data-workbench] .gkx-sticky-actions :is(th, td):last-child { position: sticky; right: 0; z-index: 2; background: #fff; }
+html[data-workbench] .gkx-sticky-actions th:last-child { z-index: 3; background: #f7f8fa; }
+html[data-workbench] .gkx-sticky-actions :is(th, td):last-child::before { content: ""; position: absolute; top: 0; bottom: -1px; left: -32px; width: 32px; background: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, .08)); pointer-events: none; }
+html[data-workbench] .gkx-sticky-actions tbody tr:hover > td:last-child { background: #f7f8fa; }
+html[data-workbench] .gkx-sticky-actions tbody tr:is(.selected, [aria-selected="true"]) > td:last-child,
+html[data-workbench] .gkx-sticky-actions tbody tr:has(.row-check:checked) > td:last-child { background: #e8f3ff; }
+html[data-workbench] .status { min-height: 22px; gap: 8px; vertical-align: middle; }
+html[data-workbench] .table-wrap td > .link,
+html[data-workbench] .table-wrap td > .btn,
+html[data-workbench] .table-wrap td > .gkx-tag { vertical-align: middle; }
+.gkx-tag { display: inline-flex; align-items: center; min-width: 0; min-height: 24px; padding: 2px 8px; border: 0; border-radius: 4px; background: #f2f3f5; color: #1d2129; font-size: 12px; line-height: 20px; font-weight: 400; white-space: nowrap; }
+.gkx-tag.info,
+.gkx-tag[data-tone="info"] { background: #e8f3ff; color: #165dff; }
+.gkx-tag.success,
+.gkx-tag[data-tone="success"] { background: #e8ffea; color: #00b42a; }
+
+html[data-workbench] .btn { border-color: transparent; background: #f2f3f5; color: #4e5969; }
+html[data-workbench] .btn:hover { border-color: transparent; background: #e5e6eb; color: #4e5969; }
+html[data-workbench] .btn:active { border-color: transparent; background: #c9cdd4; color: #4e5969; }
+html[data-workbench] .btn.primary { border-color: #165dff; background: #165dff; color: #fff; }
+html[data-workbench] .btn.primary:hover { border-color: #4080ff; background: #4080ff; color: #fff; }
+html[data-workbench] .btn.primary:active { border-color: #0e42d2; background: #0e42d2; color: #fff; }
+html[data-workbench] .btn.danger { border-color: #f53f3f; background: #f53f3f; color: #fff; }
+html[data-workbench] .btn.danger:hover { border-color: #f76560; background: #f76560; color: #fff; }
+html[data-workbench] .btn.danger:active { border-color: #cb272d; background: #cb272d; color: #fff; }
+html[data-workbench] .btn:disabled,
+html[data-workbench] .btn:disabled:is(:hover, :active, :focus-visible) { border-color: #e5e6eb; background: #f7f8fa; color: #c9cdd4; cursor: not-allowed; }
+html[data-workbench] .btn.primary:disabled,
+html[data-workbench] .btn.primary:disabled:is(:hover, :active, :focus-visible) { border-color: #94bfff; background: #94bfff; color: #fff; }
+
+html[data-workbench] .gkx-close-control {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 32px;
+  width: 32px;
+  min-width: 32px;
+  height: 32px;
+  margin: 0;
+  padding: 8px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  font-size: 0;
+  line-height: 0;
+}
+html[data-workbench] .gkx-close-control::before,
+html[data-workbench] .gkx-close-control::after { content: none; display: none; }
+html[data-workbench] .gkx-close-control:hover { background: #f2f3f5; }
+html[data-workbench] .gkx-close-control:active { background: #e5e6eb; }
+.gkx-close-icon { display: block; flex: 0 0 16px; width: 16px; height: 16px; max-width: none; }
+
+html[data-workbench] .modal:is(.is-compact, [data-size="compact"]):not(.confirm-dialog) { width: min(480px, calc(100vw - 32px)); }
+html[data-workbench] .modal-mask { transition: opacity var(--gkx-surface-mask) ease, visibility 0s linear var(--gkx-surface-exit); }
+html[data-workbench] .modal-mask .modal { transition: opacity var(--gkx-surface-enter) ease, transform var(--gkx-surface-enter) ease, visibility 0s linear var(--gkx-surface-exit); }
+html[data-workbench] .modal-mask:not(.open) .modal { transition-duration: var(--gkx-surface-exit), var(--gkx-surface-exit), 0s; }
+html[data-workbench] .modal-mask.open,
+html[data-workbench] .modal-mask.open .modal { transition-delay: 0s; }
+
+html[data-workbench] .confirm-dialog {
+  width: 400px;
+  max-width: calc(100vw - 32px);
+  max-height: calc(100vh - 32px);
+  max-height: calc(100dvh - 32px);
+  margin: auto;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 4px;
+  background: #fff;
+  color: #1d2129;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .16);
+}
+html[data-workbench] .confirm-dialog[open] { opacity: 1; visibility: visible; transform: none; animation: gkx-dialog-in var(--gkx-surface-enter) ease; }
+html[data-workbench] .confirm-dialog form { display: flex; flex-direction: column; min-height: 0; max-height: inherit; margin: 0; }
+html[data-workbench] .confirm-dialog :is(.confirm-head, .modal-head) { position: relative; display: flex; align-items: center; justify-content: space-between; flex: 0 0 auto; min-height: 48px; height: 48px; margin: 0; padding: 12px 52px 12px 20px; gap: 8px; border: 0; border-bottom: 1px solid #e5e6eb; }
+html[data-workbench] .confirm-dialog :is(.confirm-head, .modal-head) h2 { min-width: 0; margin: 0; color: #1d2129; font-size: 16px; line-height: 24px; font-weight: 500; }
+html[data-workbench] .confirm-dialog :is(.confirm-head, .modal-head) .gkx-close-control { position: absolute; top: 8px; right: 12px; }
+html[data-workbench] .confirm-dialog :is(.confirm-body, .modal-body) { display: flex; flex: 1 1 auto; flex-direction: column; min-height: 84px; margin: 0; padding: 20px; gap: 4px; overflow-y: auto; color: #1d2129; font-size: 14px; line-height: 22px; }
+html[data-workbench] .confirm-dialog :is(.confirm-body, .modal-body) p { margin: 0; font: inherit; }
+html[data-workbench] .confirm-dialog :is(.confirm-body, .modal-body) .subtle { margin: 0; color: #86909c; font-size: 14px; line-height: 22px; }
+html[data-workbench] .confirm-dialog :is(.confirm-actions, .modal-foot) { display: flex; flex: 0 0 auto; align-items: center; justify-content: flex-end; flex-wrap: wrap; box-sizing: border-box; min-height: 64px; height: 64px; margin: 0; padding: 16px 20px; gap: 10px; border: 0; border-top: 1px solid #e5e6eb; }
+html[data-workbench] .confirm-dialog :is(.confirm-actions, .modal-foot) .btn { min-width: 0; }
+html[data-workbench] .confirm-dialog::backdrop { background: rgba(0, 0, 0, .5); animation: gkx-mask-in var(--gkx-surface-mask) ease; }
+html[data-workbench] .confirm-dialog.is-closing { pointer-events: none; animation: gkx-dialog-out var(--gkx-surface-exit) ease forwards; }
+html[data-workbench] .confirm-dialog.is-closing::backdrop { animation: gkx-mask-out var(--gkx-surface-mask) ease forwards; }
+
+html[data-workbench] #toast {
+  position: fixed;
+  z-index: 1000;
+  top: 16px;
+  left: 50%;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  min-height: 40px;
+  margin: 0;
+  padding: 8px 16px;
+  border: 1px solid #e5e6eb;
+  border-radius: 2px;
+  background: #fff;
+  color: #1d2129;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, .1);
+  font-size: 14px;
+  line-height: 22px;
+  text-align: left;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translate(-50%, -6px);
+  transition: opacity var(--gkx-surface-exit) ease, transform var(--gkx-surface-exit) ease, visibility 0s linear var(--gkx-surface-exit);
+}
+html[data-workbench] #toast.show { opacity: 1; visibility: visible; transform: translate(-50%, 0); transition-duration: var(--gkx-surface-enter), var(--gkx-surface-enter), 0s; transition-delay: 0s; }
+.gkx-message-icon { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 20px; width: 20px; height: 20px; }
+.gkx-message-icon img { display: block; flex: 0 0 auto; max-width: none; }
+.gkx-message-text { display: block; min-width: 0; overflow-wrap: anywhere; }
+
+@keyframes gkx-dialog-in { from { opacity: 0; transform: translateY(8px) scale(.99); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes gkx-dialog-out { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(6px) scale(.99); } }
+@keyframes gkx-mask-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes gkx-mask-out { from { opacity: 1; } to { opacity: 0; } }
+
+@media (max-width: 767px) {
+  html[data-workbench] .shell.has-breadcrumb-layout { grid-template-columns: minmax(0, 1fr); }
+  html[data-workbench] .sidebar { padding: 0 8px; overflow: visible; }
+  html[data-workbench] #navigation { width: 100%; }
+  html[data-workbench] .group-name { width: 100%; min-height: 44px; height: 44px; }
+  html[data-workbench] .nav-item { width: 100%; min-height: 40px; height: auto; white-space: normal; overflow-wrap: anywhere; }
+  html[data-workbench] .main { margin: 0 8px 8px; padding: 8px; }
+  html[data-workbench] .page { padding: 16px; }
+  html[data-workbench] .table-wrap th,
+  html[data-workbench] .table-wrap td { padding-inline: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-workbench] .confirm-dialog[open],
+  html[data-workbench] .confirm-dialog.is-closing,
+  html[data-workbench] .confirm-dialog::backdrop,
+  html[data-workbench] .confirm-dialog.is-closing::backdrop { animation: none; }
+  html[data-workbench] .modal-mask,
+  html[data-workbench] .modal-mask .modal,
+  html[data-workbench] #toast,
+  html[data-workbench] #toast.show { transition: none; }
+}

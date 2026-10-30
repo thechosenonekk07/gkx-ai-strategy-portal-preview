@@ -291,6 +291,8 @@ td .check { vertical-align: middle; }
 .para-text:focus { outline: 0; border-color: var(--hover); }
 .para-tools { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; min-height: 32px; margin-top: 8px; padding-top: 8px; gap: 8px 16px; border-top: 1px solid var(--border); }
 .para-tools .link { min-height: 32px; }
+.para-drag-handle { cursor: grab; user-select: none; touch-action: auto; }
+.para-drag-handle:active { cursor: grabbing; }
 #liveEditControls,
 #paragraphStructure { align-items: center; gap: 8px; }
 #liveEditControls .subtle { flex: 0 1 auto; }
@@ -326,12 +328,13 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monos
 .modal-mask.open .modal { opacity: 1; visibility: visible; transform: translateY(0) scale(1); transition-delay: 0s; }
 .modal-mask[inert],
 .modal[inert] { pointer-events: none; }
-.modal-head { display: flex; align-items: center; justify-content: space-between; flex: 0 0 auto; min-height: 56px; height: auto; padding: 12px 24px; gap: 16px; border-bottom: 1px solid var(--border); }
-.modal-head h2 { min-width: 0; margin: 0; color: #1d2129; font-size: 16px; line-height: 24px; font-weight: 500; overflow-wrap: anywhere; }
-.modal-body { min-height: 0; padding: 24px; color: #1d2129; font-size: 14px; line-height: 22px; overflow: auto; overflow-wrap: anywhere; }
+.modal-mask .modal-head { position: relative; display: flex; align-items: center; justify-content: space-between; flex: 0 0 auto; min-height: 48px; height: auto; padding: 24px 24px 0; gap: 16px; border-bottom: 0; }
+.modal-mask .modal-head > .modal-close { position: absolute; top: 20px; right: 20px; }
+.modal-mask .modal-head h2 { min-width: 0; margin: 0; padding-right: 40px; color: #1d2129; font-size: 16px; line-height: 24px; font-weight: 500; overflow-wrap: anywhere; }
+.modal-mask .modal-body { min-height: 0; padding: 16px 24px 24px; color: #1d2129; font-size: 14px; line-height: 22px; overflow: auto; overflow-wrap: anywhere; }
 .modal-body > p:first-child { margin-top: 0; }
 .modal-body > p:last-child { margin-bottom: 0; }
-.modal-foot { display: flex; align-items: center; justify-content: flex-end; flex: 0 0 auto; flex-wrap: wrap; min-height: 64px; height: auto; padding: 16px 24px; gap: 16px; border-top: 1px solid var(--border); }
+.modal-mask .modal-foot { box-sizing: border-box; display: flex; align-items: center; justify-content: flex-end; flex: 0 0 auto; flex-wrap: wrap; min-height: 64px; height: 64px; padding: 16px 24px; gap: 16px; border-top: 1px solid var(--border); }
 .modal-foot .btn { min-width: 80px; }
 .modal-close { position: relative; display: inline-flex; align-items: center; justify-content: center; flex: 0 0 28px; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 4px; background: transparent; color: var(--text3); font-size: 0; line-height: 0; }
 .modal-close::before,
