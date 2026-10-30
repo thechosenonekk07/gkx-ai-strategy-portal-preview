@@ -33,7 +33,20 @@
     breadcrumb.querySelector('[aria-current="page"]').textContent = content.querySelector('h1')?.textContent || '';
   }
   const baseRenderPage = renderPage;
-  renderPage = function (...args) { const result = baseRenderPage(...args); syncPageChrome(); return result; };
+  renderPage = function (...args) {
+    const focused = document.activeElement;
+    const focusKey = currentView === 'history' && content.contains(focused)
+      ? ['id', 'data-version', 'data-action', 'aria-label'].find(key => focused.hasAttribute(key)) : null;
+    const focusValue = focusKey ? focused.getAttribute(focusKey) : null;
+    const result = baseRenderPage(...args);
+    syncPageChrome();
+    if (focusKey && (document.activeElement === document.body || document.activeElement === focused)) {
+      const replacement = [...content.querySelectorAll(focused.localName)]
+        .find(element => element.getAttribute(focusKey) === focusValue);
+      replacement?.focus({ preventScroll: true });
+    }
+    return result;
+  };
   syncPageChrome();
   dialog.tabIndex = -1;
 
