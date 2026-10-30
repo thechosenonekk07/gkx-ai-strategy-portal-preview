@@ -18,7 +18,35 @@
   let modalReturn = null;
   let reviewReturn = null;
 
-  document.querySelector('.integration-context').append(reviewToggle);
+  const breadcrumbBar = document.querySelector('.app-strip');
+  const moduleName = breadcrumbBar.querySelector('strong').textContent;
+  const breadcrumb = document.createElement('nav');
+  breadcrumb.className = 'workbench-breadcrumb';
+  breadcrumb.setAttribute('aria-label', '面包屑');
+  breadcrumb.innerHTML = '<ol><li class="breadcrumb-module"></li><li aria-current="page"></li></ol>';
+  breadcrumb.querySelector('.breadcrumb-module').textContent = moduleName;
+  breadcrumbBar.querySelector('strong').remove();
+  breadcrumbBar.prepend(breadcrumb);
+  breadcrumbBar.classList.add('workbench-breadcrumb-bar');
+  document.querySelector('.main').prepend(breadcrumbBar);
+  app.classList.add('has-breadcrumb-layout');
+
+  function syncPageChrome() {
+    breadcrumb.querySelector('[aria-current="page"]').textContent = content.querySelector('h1')?.textContent || '';
+    const header = content.querySelector('.page-head');
+    if (header) {
+      let actions = header.querySelector('.page-actions');
+      if (!actions) { actions = document.createElement('div'); actions.className = 'page-actions'; header.append(actions); }
+      if (reviewToggle.parentElement !== actions) actions.append(reviewToggle);
+    }
+    reviewToggle.textContent = '需求评审';
+    reviewToggle.title = reviewToggle.getAttribute('aria-pressed') === 'true' ? '收起需求评审' : '展开需求评审';
+  }
+  const baseRenderPage = renderPage;
+  renderPage = function (...args) { const result = baseRenderPage(...args); syncPageChrome(); return result; };
+  const baseSetReviewOpen = setReviewOpen;
+  setReviewOpen = function (open) { baseSetReviewOpen(open); syncPageChrome(); };
+  syncPageChrome();
   const reviewMask = document.createElement('div');
   reviewMask.className = 'review-mask';
   reviewMask.setAttribute('aria-hidden', 'true');
@@ -160,6 +188,7 @@
     });
   }
   function polishPage() {
+    syncPageChrome();
     const heading = content.querySelector('h1');
     if (heading) heading.tabIndex = -1;
     content.querySelectorAll('input[type="range"]').forEach(range => {
@@ -208,7 +237,7 @@
   confirmation.className = 'modal confirm-dialog';
   confirmation.setAttribute('aria-labelledby', 'versionConfirmTitle');
   confirmation.setAttribute('aria-describedby', 'versionConfirmMessage');
-  confirmation.innerHTML = '<form method="dialog"><header class="modal-head"><h2 id="versionConfirmTitle">恢复历史版本</h2><button class="modal-close" value="cancel" aria-label="关闭确认框">×</button></header><div class="modal-body"><p id="versionConfirmMessage"></p><p class="subtle">恢复前会在本次预览会话中保留当前稿件快照。</p></div><footer class="modal-foot"><button class="btn" value="cancel" autofocus>取消</button><button class="btn primary" value="confirm">确认恢复</button></footer></form>';
+  confirmation.innerHTML = '<form method="dialog"><header class="modal-head"><h2 id="versionConfirmTitle">恢复历史版本</h2><button class="modal-close" value="cancel" aria-label="关闭确认框">×</button></header><div class="modal-body"><p id="versionConfirmMessage"></p><p class="subtle">恢复前将保留当前稿件快照；所选版本将替换当前内容。</p></div><footer class="modal-foot"><button class="btn" value="cancel" autofocus>取消</button><button class="btn primary" value="confirm">确认恢复</button></footer></form>';
   document.body.append(confirmation);
   confirmation.addEventListener('click', event => { if (event.target === confirmation) confirmation.close('cancel'); });
   window.confirmAction = message => new Promise(resolve => {

@@ -11,8 +11,36 @@
   let lastTrigger = null;
   let opened = false;
 
-  // Keep review controls available in both embedded and standalone mobile layouts.
-  document.querySelector('.strip-right')?.append(document.getElementById('reviewToggle'));
+  const reviewToggle = document.getElementById('reviewToggle');
+  const breadcrumbBar = document.querySelector('.app-strip');
+  const moduleName = breadcrumbBar.querySelector('strong').textContent;
+  const breadcrumb = document.createElement('nav');
+  breadcrumb.className = 'workbench-breadcrumb';
+  breadcrumb.setAttribute('aria-label', '面包屑');
+  breadcrumb.innerHTML = '<ol><li class="breadcrumb-module"></li><li aria-current="page"></li></ol>';
+  breadcrumb.querySelector('.breadcrumb-module').textContent = moduleName;
+  breadcrumbBar.querySelector('strong').remove();
+  breadcrumbBar.querySelector('.strip-right').hidden = true;
+  breadcrumbBar.prepend(breadcrumb);
+  breadcrumbBar.classList.add('workbench-breadcrumb-bar');
+  document.querySelector('.main').prepend(breadcrumbBar);
+  shell.classList.add('has-breadcrumb-layout');
+
+  function syncPageChrome() {
+    breadcrumb.querySelector('[aria-current="page"]').textContent = content.querySelector('h1')?.textContent || '';
+    const header = content.querySelector('.page-head');
+    if (header) {
+      let actions = header.querySelector('.page-actions');
+      if (!actions) { actions = document.createElement('div'); actions.className = 'page-actions'; header.append(actions); }
+      if (reviewToggle.parentElement !== actions) actions.append(reviewToggle);
+    }
+    reviewToggle.textContent = '需求评审';
+    reviewToggle.title = reviewToggle.getAttribute('aria-pressed') === 'true' ? '收起需求评审' : '展开需求评审';
+  }
+  const baseOpenPage = openPage;
+  openPage = function (...args) { const result = baseOpenPage(...args); syncPageChrome(); return result; };
+  reviewToggle.addEventListener('click', syncPageChrome);
+  syncPageChrome();
 
   panel.setAttribute('role', 'dialog');
   panel.setAttribute('tabindex', '-1');
@@ -106,6 +134,7 @@
   });
 
   function polishPage() {
+    syncPageChrome();
     content.querySelectorAll('h1').forEach(title => title.tabIndex = -1);
     content.querySelectorAll('.marquee').forEach(reminder => reminder.tabIndex = 0);
     content.querySelectorAll('input[type="range"]').forEach(range => {
@@ -122,7 +151,7 @@
   confirmation.className = 'confirm-dialog';
   confirmation.setAttribute('aria-labelledby', 'confirmTitle');
   confirmation.setAttribute('aria-describedby', 'confirmDescription');
-  confirmation.innerHTML = '<form method="dialog"><header class="confirm-head"><h2 id="confirmTitle">撤回情报</h2><button class="close" value="cancel" aria-label="关闭对话框">×</button></header><div class="confirm-body"><p id="confirmDescription"></p><p class="subtle">本次操作仅更新当前原型页面中的示意状态。</p></div><footer class="confirm-actions"><button class="btn" value="cancel" autofocus>取消</button><button class="btn primary" value="confirm">确认撤回</button></footer></form>';
+  confirmation.innerHTML = '<form method="dialog"><header class="confirm-head"><h2 id="confirmTitle">撤回情报</h2><button class="close" value="cancel" aria-label="关闭对话框">×</button></header><div class="confirm-body"><p id="confirmDescription"></p><p class="subtle">撤回后，该情报将标记为“已撤回”。</p></div><footer class="confirm-actions"><button class="btn" value="cancel" autofocus>取消</button><button class="btn primary" value="confirm">确认撤回</button></footer></form>';
   document.body.append(confirmation);
   confirmation.addEventListener('click', event => { if (event.target === confirmation) confirmation.close('cancel'); });
   window.confirmAction = message => new Promise(resolve => {
