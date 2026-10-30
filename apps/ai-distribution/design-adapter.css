@@ -666,7 +666,10 @@ html.portal-embedded .shell.has-breadcrumb-layout { grid-template-rows: 0 minmax
 td > .gkx-select,
 td > .gkx-text-input { width: 100%; min-width: 128px; }
 .slider.gkx-range { flex: 1 1 0; width: 100%; margin: 14px 0; }
+.intel-title-cell { min-width: 160px; }
+.intel-title-cell > .gkx-truncate { max-width: 320px; }
 @media (max-width: 767px) {
+  .intel-title-cell > .gkx-truncate { max-width: 240px; }
   .filterbar > .gkx-select,
   .filterbar > .gkx-text-input { flex: 1 1 140px; width: auto; min-width: 0; }
   .gkx-select.wide,

@@ -99,7 +99,7 @@
       if (!button.hasAttribute('aria-label')) button.setAttribute('aria-label', '关闭');
       if (!button.querySelector(':scope > .gkx-close-icon')) button.replaceChildren(image(assets.close, 16, 16, 'gkx-close-icon'));
     });
-    matching(root, '.gkx-file-name').forEach(name => {
+    matching(root, '.gkx-file-name,.gkx-truncate').forEach(name => {
       const title = name.textContent.trim();
       if (name.title !== title) name.title = title;
     });
@@ -107,21 +107,41 @@
       if (!item.hasAttribute('title')) item.title = item.textContent.trim();
     });
     matching(root, 'table').forEach(table => {
+      const markedHeaders = [...table.querySelectorAll('thead th[data-operation-column]')];
       const lastHeader = table.querySelector('thead tr:last-child > th:last-child');
-      const sticky = !!lastHeader && lastHeader.textContent.trim() === '操作';
+      const visibleHeader = lastHeader && !lastHeader.hidden && !lastHeader.closest('[hidden]')
+        && getComputedStyle(lastHeader).display !== 'none' && getComputedStyle(lastHeader).visibility !== 'hidden';
+      // Only the final column is supported. An explicit marker elsewhere disables guessing.
+      const operationHeader = !visibleHeader ? null : markedHeaders.length
+        ? lastHeader.hasAttribute('data-operation-column') && lastHeader.getAttribute('data-operation-column') !== 'false' ? lastHeader : null
+        : lastHeader.textContent.trim() === '操作' ? lastHeader : null;
+      const index = table.getAttribute('data-operation-column') === 'false' ? -1 : operationHeader?.cellIndex ?? -1;
+      const sticky = index >= 0;
       if (table.classList.contains('gkx-sticky-actions') !== sticky) table.classList.toggle('gkx-sticky-actions', sticky);
+      [...table.rows].forEach(row => [...row.cells].forEach((cell, column) => {
+        const operation = sticky && column === index && cell.colSpan === 1 && !cell.hidden;
+        if (cell.classList.contains('gkx-operation-cell') !== operation) cell.classList.toggle('gkx-operation-cell', operation);
+      }));
     });
   }
   function relevant(node) {
-    return node instanceof Element && (node.matches(`${closeSelector},.gkx-file-name,.nav-item,table`) || !!node.querySelector(`${closeSelector},.gkx-file-name,.nav-item,table`));
+    return node instanceof Element && (node.matches(`${closeSelector},.gkx-file-name,.gkx-truncate,.nav-item,table,tr`) || !!node.querySelector(`${closeSelector},.gkx-file-name,.gkx-truncate,.nav-item,table,tr`));
   }
   const observer = new MutationObserver(records => {
-    if (polishPending || !records.some(record => (record.target instanceof Element && (record.target.matches('.gkx-file-name') || record.target.closest('thead'))) || [...record.addedNodes].some(relevant))) return;
+    if (polishPending || !records.some(record => (record.target instanceof Element && (record.target.matches('.gkx-file-name,.gkx-truncate') || record.target.closest('thead') || record.type === 'attributes' && record.target.matches('table'))) || [...record.addedNodes].some(relevant))) return;
     polishPending = true;
     queueMicrotask(() => { polishPending = false; polish(document); });
   });
+  const blockDisabledLink = event => {
+    if (event.type === 'keydown' && !['Enter', ' ', 'Spacebar'].includes(event.key)) return;
+    const target = event.target instanceof Element ? event.target.closest('.textlink[aria-disabled="true"],.gkx-selection-bar .link[aria-disabled="true"]') : null;
+    if (!target) return;
+    event.preventDefault(); event.stopImmediatePropagation();
+  };
+  document.addEventListener('click', blockDisabledLink, true);
+  document.addEventListener('keydown', blockDisabledLink, true);
   reduceMotion.addEventListener('change', event => { if (event.matches) [...pendingClosures].forEach(state => state.finish()); });
   window.GKXSurface = { notify, closeDialog, polish };
   polish(document);
-  observer.observe(document.body, { childList: true, subtree: true });
+  observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['data-operation-column', 'hidden'] });
 })();
