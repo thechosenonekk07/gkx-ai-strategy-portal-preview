@@ -406,6 +406,37 @@ td .checkbox { vertical-align: middle; }
 .metric strong { color: #1d2129; font-size: 24px; line-height: 32px; font-weight: 500; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
 .metric small { display: block; margin-top: 4px; color: var(--text3); font-size: 12px; line-height: 20px; }
 
+/* Topology summary: one quiet surface, matching the supplied statistics reference. */
+html[data-workbench="ai"] .metrics.topology-metrics {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 32px;
+  margin: 0 0 16px;
+  padding: 24px 32px;
+  border: 0;
+  border-radius: 4px;
+  background: #f2f3f5;
+}
+html[data-workbench="ai"] .topology-metrics > .metric {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  align-content: start;
+  gap: 12px;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+html[data-workbench="ai"] .topology-metrics .metric label { margin: 0; color: #4e5969; font-size: 14px; line-height: 22px; }
+html[data-workbench="ai"] .topology-metrics .metric strong { font-size: 24px; line-height: 32px; font-weight: 500; font-variant-numeric: tabular-nums; }
+html[data-workbench="ai"] .topology-metrics .metric small { margin: 0; color: #86909c; font-size: 12px; line-height: 20px; overflow-wrap: anywhere; }
+@media (min-width: 768px) and (max-width: 1024px) {
+  html[data-workbench="ai"] .metrics.topology-metrics { gap: 24px; padding: 24px; }
+}
+@media (max-width: 767px) {
+  html[data-workbench="ai"] .metrics.topology-metrics { grid-template-columns: minmax(0, 1fr); gap: 24px; padding: 20px; }
+  html[data-workbench="ai"] .topology-metrics > .metric { gap: 8px; }
+}
+
 .topology-grid { grid-template-columns: minmax(0, 1fr) 160px minmax(0, 1fr); grid-template-rows: repeat(4, minmax(96px, auto)); gap: 12px 20px; padding: 16px 0; }
 .topology-wires line { stroke: #c9cdd4; stroke-width: 1; }
 .top-node { min-width: 0; padding: 12px; border: 1px solid var(--border); border-radius: 4px; background: #fff; box-shadow: none; text-align: left; }
