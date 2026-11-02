@@ -198,6 +198,9 @@ html[data-workbench] .gkx-detail-grid .gkx-detail-value { min-width: 0; margin: 
 html[data-workbench] .gkx-truncate { display: inline-block; min-width: 0; max-width: 100%; width: var(--gkx-truncate-width, 280px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; vertical-align: middle; }
 html[data-workbench] td > .gkx-truncate { display: block; }
 html[data-workbench] .gkx-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 0; padding: 32px 16px; gap: 8px; color: #86909c; font-size: 14px; line-height: 22px; text-align: center; }
+/* Main forms/editing sections use the white workspace; gray is reserved for nested information. */
+html[data-workbench] .gkx-primary-section { padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+html[data-workbench] .gkx-primary-section + .gkx-primary-section { margin-top: 24px; padding-top: 24px; border-top: 1px solid #e5e6eb; }
 html[data-workbench] .textlink,
 html[data-workbench] .gkx-selection-bar .link { display: inline-flex; align-items: center; min-height: 22px; height: auto; margin: 0; padding: 0; border: 0; border-radius: 2px; background: transparent; color: #165dff; font-size: 14px; line-height: 22px; font-weight: 400; text-decoration: none; vertical-align: middle; cursor: pointer; transition: color 100ms linear, background-color 100ms linear; }
 html[data-workbench] .textlink:hover,
@@ -210,6 +213,49 @@ html[data-workbench] .gkx-selection-bar .link:is(:disabled, [aria-disabled="true
 html[data-workbench] .gkx-selection-bar .link:is(:disabled, [aria-disabled="true"]):is(:hover, :active) { border: 0; background: transparent; color: #c9cdd4; box-shadow: none; cursor: not-allowed; }
 html[data-workbench] .table-wrap tbody tr,
 html[data-workbench] .table-wrap tbody td { transition: background-color 100ms linear; }
+
+/* All workbench statistics use the calibrated Figma 1831:18703/19104 rhythm.
+   Child count determines height; absent descriptions never create empty rows. */
+html[data-workbench] :is(.metrics, .metric-row) {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(24px, 5vw, 64px);
+  margin: 16px 0;
+  padding: 16px clamp(16px, 5vw, 64px);
+  border: 0;
+  border-radius: 2px;
+  background: #f2f3f5;
+}
+html[data-workbench] :is(.metrics, .metric-row):first-child { margin-top: 0; }
+html[data-workbench] :is(.metrics, .metric-row)[hidden] { display: none; }
+html[data-workbench] :is(.metrics, .metric-row) > .metric {
+  display: grid;
+  grid-template-rows: none;
+  grid-auto-rows: max-content;
+  align-content: start;
+  justify-self: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 232px;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+html[data-workbench] :is(.metrics, .metric-row) > .metric label { margin: 0; color: #4e5969; font-size: 14px; line-height: 22px; }
+html[data-workbench] :is(.metrics, .metric-row) > .metric strong { color: #1d2129; font-size: 20px; line-height: 28px; font-weight: 500; font-variant-numeric: tabular-nums; white-space: normal; overflow-wrap: anywhere; }
+html[data-workbench] :is(.metrics, .metric-row) > .metric small { margin: 0; color: #86909c; font-size: 12px; line-height: 20px; overflow-wrap: anywhere; }
+@media (min-width: 768px) and (max-width: 1024px) {
+  html[data-workbench] :is(.metrics, .metric-row) { gap: 24px; padding: 16px 24px; }
+}
+@media (min-width: 768px) and (max-height: 760px) {
+  html[data-workbench] :is(.metrics, .metric-row) { padding-block: 12px; margin-bottom: 8px; }
+  html[data-workbench] :is(.metrics, .metric-row) > .metric { row-gap: 4px; }
+}
+@media (max-width: 767px) {
+  html[data-workbench] :is(.metrics, .metric-row) { grid-template-columns: minmax(0, 1fr); gap: 16px; padding: 16px; }
+  html[data-workbench] :is(.metrics, .metric-row) > .metric { max-width: none; justify-self: stretch; }
+}
 
 @keyframes gkx-dialog-in { from { opacity: 0; transform: translateY(8px) scale(.99); } to { opacity: 1; transform: translateY(0) scale(1); } }
 @keyframes gkx-dialog-out { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(6px) scale(.99); } }

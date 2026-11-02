@@ -406,44 +406,9 @@ td .checkbox { vertical-align: middle; }
 .metric strong { color: #1d2129; font-size: 24px; line-height: 32px; font-weight: 500; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
 .metric small { display: block; margin-top: 4px; color: var(--text3); font-size: 12px; line-height: 20px; }
 
-/* Statistics in Figma 1831:18703/19104: 20/28 values, 8px rhythm, 16px insets.
-   Keep content-driven height and adapt the same page's whitespace to short previews. */
-html[data-workbench="ai"] .metrics.topology-metrics {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(24px, 5vw, 64px);
-  margin: 0 0 16px;
-  padding: 16px clamp(16px, 5vw, 64px);
-  border: 0;
-  border-radius: 2px;
-  background: #f2f3f5;
-}
-html[data-workbench="ai"] .topology-metrics > .metric {
-  display: grid;
-  grid-template-rows: auto auto auto;
-  align-content: start;
-  justify-self: center;
-  gap: 8px;
-  width: 100%;
-  max-width: 232px;
-  min-width: 0;
-  padding: 0;
-  border: 0;
-  background: transparent;
-}
-html[data-workbench="ai"] .topology-metrics .metric label { margin: 0; color: #4e5969; font-size: 14px; line-height: 22px; }
-html[data-workbench="ai"] .topology-metrics .metric strong { font-size: 20px; line-height: 28px; font-weight: 500; font-variant-numeric: tabular-nums; }
-html[data-workbench="ai"] .topology-metrics .metric small { margin: 0; color: #86909c; font-size: 12px; line-height: 20px; overflow-wrap: anywhere; }
-@media (min-width: 768px) and (max-width: 1024px) {
-  html[data-workbench="ai"] .metrics.topology-metrics { gap: 24px; padding: 16px 24px; }
-}
+/* Short previews keep topology whitespace compact; statistics are shared in surfaces.css. */
 @media (min-width: 768px) and (max-height: 760px) {
-  html[data-workbench="ai"] .metrics.topology-metrics { padding-block: 12px; margin-bottom: 8px; }
-  html[data-workbench="ai"] .topology-metrics > .metric { row-gap: 4px; }
   html[data-workbench="ai"] .topology-metrics + .topology-grid { padding-block: 8px; }
-}
-@media (max-width: 767px) {
-  html[data-workbench="ai"] .metrics.topology-metrics { grid-template-columns: minmax(0, 1fr); gap: 16px; padding: 16px; }
-  html[data-workbench="ai"] .topology-metrics > .metric { max-width: none; justify-self: stretch; }
 }
 
 .topology-grid { grid-template-columns: minmax(0, 1fr) 160px minmax(0, 1fr); grid-template-rows: repeat(4, minmax(96px, auto)); gap: 12px 20px; padding: 16px 0; }
@@ -716,4 +681,64 @@ td > .gkx-text-input { width: 100%; min-width: 128px; }
   .gkx-text-input.wide { min-width: 0; }
   .condition > .gkx-text-input,
   .condition > .gkx-field-error { grid-column: 1 / -1; }
+}
+
+/* Drill dashboard: two known values, scoped apart from shared summary strips. */
+html[data-workbench="ai"] .drill-dashboard { display: grid; gap: 16px; width: 100%; min-width: 0; color: #1d2129; }
+html[data-workbench="ai"] .drill-dashboard .drill-context { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 4px 16px; min-width: 0; min-height: 24px; }
+html[data-workbench="ai"] .drill-dashboard .drill-context h2 { margin: 0; font-size: 16px; line-height: 24px; font-weight: 500; }
+html[data-workbench="ai"] .drill-dashboard .drill-context > span { color: #86909c; font-size: 12px; line-height: 20px; }
+html[data-workbench="ai"] .drill-dashboard .metrics.drill-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 0; padding: 0; border: 0; border-radius: 0; background: transparent; }
+html[data-workbench="ai"] .drill-dashboard .metrics.drill-metrics > .metric.drill-metric-card { display: grid; grid-auto-rows: max-content; align-content: start; justify-self: stretch; gap: 8px; width: 100%; max-width: none; min-width: 0; min-height: 106px; padding: 16px; border: 1px solid #e5e6eb; border-radius: 8px; background: #fff; }
+html[data-workbench="ai"] .drill-dashboard .drill-metrics > .drill-metric-card label { margin: 0; color: #1d2129; font-size: 14px; line-height: 22px; font-weight: 500; }
+html[data-workbench="ai"] .drill-dashboard .drill-metrics > .drill-metric-card strong { margin: 0; color: #1d2129; font-size: 20px; line-height: 28px; font-weight: 500; font-variant-numeric: tabular-nums; white-space: nowrap; overflow-wrap: normal; }
+html[data-workbench="ai"] .drill-dashboard .drill-metrics > .drill-metric-card small { margin: 0; color: #86909c; font-size: 12px; line-height: 20px; }
+html[data-workbench="ai"] .drill-dashboard .drill-metrics > .drill-metric-card small span { color: #165dff; }
+html[data-workbench="ai"] .drill-dashboard .drill-panel-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(260px, 1fr); align-items: stretch; gap: 16px; min-width: 0; }
+html[data-workbench="ai"] .drill-dashboard :is(.drill-chart-card, .drill-detail-card) { min-width: 0; min-height: 278px; padding: 16px; border: 1px solid #e5e6eb; border-radius: 8px; background: #fff; }
+html[data-workbench="ai"] .drill-dashboard .drill-card-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 12px; min-width: 0; min-height: 28px; margin: 0 0 10px; }
+html[data-workbench="ai"] .drill-dashboard .drill-card-head h3 { min-width: 0; margin: 0; font-size: 14px; line-height: 22px; font-weight: 500; }
+html[data-workbench="ai"] .drill-dashboard .drill-title-group { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 12px; min-width: 0; }
+html[data-workbench="ai"] .drill-dashboard .drill-chart-legend { display: inline-flex; align-items: center; gap: 6px; color: #4e5969; font-size: 12px; line-height: 20px; white-space: nowrap; }
+html[data-workbench="ai"] .drill-dashboard .drill-chart-legend i { display: block; width: 16px; height: 2px; border-radius: 1px; background: #165dff; }
+html[data-workbench="ai"] .drill-dashboard .drill-chart-switch { display: inline-flex; flex: 0 0 auto; gap: 2px; padding: 2px; border-radius: 4px; background: #f2f3f5; }
+html[data-workbench="ai"] .drill-dashboard .drill-view-button { height: 24px; padding: 0 8px; border: 0; border-radius: 3px; background: transparent; color: #4e5969; font-size: 12px; line-height: 20px; white-space: nowrap; transition: color 100ms linear, background-color 100ms linear; }
+html[data-workbench="ai"] .drill-dashboard .drill-view-button:hover { color: #165dff; }
+html[data-workbench="ai"] .drill-dashboard .drill-view-button[aria-pressed="true"] { background: #fff; color: #165dff; }
+html[data-workbench="ai"] .drill-dashboard .drill-chart-stage { position: relative; width: 100%; min-width: 0; height: 206px; }
+html[data-workbench="ai"] .drill-dashboard .drill-chart-svg { display: block; width: 100%; max-width: 100%; height: 206px; overflow: visible; font-family: inherit; font-size: 12px; }
+html[data-workbench="ai"] .drill-dashboard .drill-grid-lines line { stroke: #e5e6eb; stroke-width: 1; }
+html[data-workbench="ai"] .drill-dashboard .drill-grid-lines text { fill: #4e5969; font-size: 12px; }
+html[data-workbench="ai"] .drill-dashboard .drill-chart-baseline,
+html[data-workbench="ai"] .drill-dashboard .drill-chart-x-label line { stroke: #86909c; stroke-width: 1; }
+html[data-workbench="ai"] .drill-dashboard .drill-chart-x-label text { fill: #4e5969; font-size: 12px; }
+html[data-workbench="ai"] .drill-dashboard .drill-chart-area { pointer-events: none; }
+html[data-workbench="ai"] .drill-dashboard .drill-chart-line { fill: none; stroke: #165dff; stroke-width: 2; vector-effect: non-scaling-stroke; pointer-events: none; }
+html[data-workbench="ai"] .drill-dashboard .drill-chart-point { cursor: help; outline: 0; }
+html[data-workbench="ai"] .drill-dashboard .drill-point-hit { fill: transparent; pointer-events: all; }
+html[data-workbench="ai"] .drill-dashboard .drill-point-dot { fill: #fff; stroke: #165dff; stroke-width: 2; vector-effect: non-scaling-stroke; }
+html[data-workbench="ai"] .drill-dashboard .drill-point-ring { fill: none; stroke: #165dff; stroke-width: 2; opacity: 0; pointer-events: none; }
+html[data-workbench="ai"] .drill-dashboard .drill-chart-point:is(:hover, :focus-visible) .drill-point-ring { opacity: .35; }
+html[data-workbench="ai"] .drill-dashboard .drill-point-value { fill: #165dff; font-size: 12px; font-weight: 500; pointer-events: none; }
+html[data-workbench="ai"] .drill-dashboard .drill-chart-tooltip { position: absolute; z-index: 3; display: grid; grid-template-columns: auto auto; gap: 4px 16px; width: max-content; max-width: calc(100% - 16px); padding: 8px 12px; border: 1px solid #e5e6eb; border-radius: 4px; background: #fff; box-shadow: 0 2px 6px rgba(0, 0, 0, .16); pointer-events: none; }
+html[data-workbench="ai"] .drill-dashboard .drill-chart-tooltip > span { color: #4e5969; font-size: 12px; line-height: 20px; }
+html[data-workbench="ai"] .drill-dashboard .drill-chart-tooltip strong { color: #1d2129; font-size: 14px; line-height: 20px; font-weight: 500; text-align: right; font-variant-numeric: tabular-nums; }
+html[data-workbench="ai"] .drill-dashboard .drill-chart-tooltip small { grid-column: 1 / -1; color: #86909c; font-size: 12px; line-height: 20px; }
+html[data-workbench="ai"] .drill-dashboard .drill-data-table { width: 100%; border-collapse: collapse; table-layout: fixed; white-space: normal; font-variant-numeric: tabular-nums; }
+html[data-workbench="ai"] .drill-dashboard .drill-data-table caption { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); clip-path: inset(50%); white-space: nowrap; }
+html[data-workbench="ai"] .drill-dashboard .drill-data-table :is(th, td) { height: 40px; padding: 8px 12px; border-bottom: 1px solid #e5e6eb; color: #1d2129; font-size: 14px; line-height: 22px; vertical-align: middle; }
+html[data-workbench="ai"] .drill-dashboard .drill-data-table thead th { background: #f7f8fa; color: #4e5969; font-weight: 500; }
+html[data-workbench="ai"] .drill-dashboard .drill-data-table tbody th { background: #fff; color: #4e5969; font-weight: 400; }
+html[data-workbench="ai"] .drill-dashboard .drill-data-table :is(th, td):last-child { width: 40%; text-align: right; white-space: nowrap; }
+html[data-workbench="ai"] .drill-dashboard .drill-data-table tbody tr:last-child :is(th, td) { border-bottom: 0; }
+html[data-workbench="ai"] .drill-dashboard .drill-data-table td.drill-change-value { color: #165dff; font-weight: 500; }
+@media (max-width: 1100px) {
+  html[data-workbench="ai"] .drill-dashboard .drill-panel-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 600px) {
+  html[data-workbench="ai"] .drill-dashboard .metrics.drill-metrics { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  html[data-workbench="ai"] .drill-dashboard .metrics.drill-metrics > .metric.drill-metric-card { grid-template-columns: minmax(0, 1fr) auto; min-height: 0; gap: 4px 16px; }
+  html[data-workbench="ai"] .drill-dashboard .drill-metrics > .drill-metric-card label { grid-column: 1; }
+  html[data-workbench="ai"] .drill-dashboard .drill-metrics > .drill-metric-card strong { grid-column: 2; grid-row: 1 / 3; align-self: center; }
+  html[data-workbench="ai"] .drill-dashboard .drill-metrics > .drill-metric-card small { grid-column: 1; }
 }
