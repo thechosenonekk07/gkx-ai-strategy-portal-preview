@@ -1,6 +1,8 @@
-/* Workbench messages: 2353:10723 controls/cards and 5527:19958 reading density. */
+/* Single-layer workbench notifications, following the card at 2353:10740. */
 html[data-workbench="ai"] .gkx-inbox {
   min-width: 0;
+  width: 100%;
+  max-width: 960px;
   color: var(--gkx-control-text, #1d2129);
   font-size: 14px;
   line-height: 22px;
@@ -8,18 +10,19 @@ html[data-workbench="ai"] .gkx-inbox {
 
 html[data-workbench="ai"] .gkx-inbox-query {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 12px 16px;
   min-width: 0;
+  max-width: 100%;
   margin: 0 0 16px;
 }
 
 html[data-workbench="ai"] .gkx-inbox-search-label {
   display: flex;
   align-items: center;
-  gap: 8px;
   flex: 1 1 280px;
+  gap: 8px;
   min-width: 0;
   max-width: 480px;
 }
@@ -28,8 +31,8 @@ html[data-workbench="ai"] .gkx-inbox-search-label > span { flex: 0 0 auto; }
 
 html[data-workbench="ai"] .gkx-inbox-search-label > :is(input, .gkx-text-input) {
   flex: 1 1 auto;
-  width: 0;
   min-width: 0;
+  width: 0;
   max-width: 100%;
 }
 
@@ -54,8 +57,8 @@ html[data-workbench="ai"] .gkx-inbox-tabs {
   display: inline-flex;
   align-items: center;
   flex: 0 1 auto;
-  max-width: 100%;
   min-height: 32px;
+  max-width: 100%;
   padding: 3px;
   border-radius: 2px;
   background: var(--gkx-control-hover-fill, #f2f3f5);
@@ -83,9 +86,7 @@ html[data-workbench="ai"] .gkx-inbox-tab {
   transition: color 100ms linear, background-color 100ms linear;
 }
 
-html[data-workbench="ai"] .gkx-inbox-tab:hover {
-  color: var(--gkx-control-brand, #165dff);
-}
+html[data-workbench="ai"] .gkx-inbox-tab:hover { color: var(--gkx-control-brand, #165dff); }
 
 html[data-workbench="ai"] .gkx-inbox-tab[aria-pressed="true"] {
   background: #fff;
@@ -98,123 +99,91 @@ html[data-workbench="ai"] .gkx-inbox-tab:disabled {
   cursor: not-allowed;
 }
 
-html[data-workbench="ai"] .gkx-inbox-layout {
-  display: grid;
-  grid-template-columns: clamp(260px, 28vw, 340px) minmax(0, 1fr);
-  align-items: stretch;
-  gap: 16px;
-  min-width: 0;
-  min-height: 400px;
-}
-
-html[data-workbench="ai"] .gkx-inbox-list-panel {
+html[data-workbench="ai"] .gkx-inbox-notifications {
   display: flex;
   flex-direction: column;
-  min-width: 0;
-  min-height: 0;
-  background: #fff;
-}
-
-html[data-workbench="ai"] .gkx-inbox-list {
-  flex: 1 1 auto;
-  min-width: 0;
-  min-height: 0;
-  overflow: auto;
-  overscroll-behavior: contain;
-}
-
-html[data-workbench="ai"] .gkx-inbox-items {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-html[data-workbench="ai"] .gkx-inbox-items > li { min-width: 0; }
-
-html[data-workbench="ai"] .gkx-inbox-item {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
   gap: 12px;
-  width: 100%;
+  min-width: 0;
+}
+
+html[data-workbench="ai"] .gkx-inbox-notification {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   min-width: 0;
   margin: 0;
   padding: 16px;
   border: 1px solid var(--gkx-control-border, #e5e6eb);
   border-radius: 2px;
   background: #fff;
-  color: inherit;
-  font: inherit;
-  text-align: left;
-  white-space: normal;
-  cursor: pointer;
-  transition: color 100ms linear, background-color 100ms linear, border-color 100ms linear;
+  color: var(--gkx-control-text, #1d2129);
+  overflow-wrap: anywhere;
 }
 
-html[data-workbench="ai"] .gkx-inbox-item:hover {
-  border-color: var(--gkx-control-border-hover, #c9cdd4);
-  background: var(--gkx-control-muted, #f7f8fa);
-}
-
-html[data-workbench="ai"] .gkx-inbox-item[aria-current="true"] {
-  border-color: var(--gkx-control-brand, #165dff);
-  background: #fff;
-}
-
-html[data-workbench="ai"] .gkx-inbox-item :is(.head, .gkx-inbox-item-head) {
+html[data-workbench="ai"] .gkx-inbox-message-head {
   display: flex;
   align-items: flex-start;
-  justify-content: space-between;
-  gap: 8px;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 8px 4px;
   min-width: 0;
 }
 
-html[data-workbench="ai"] .gkx-inbox-item-title {
-  display: flex;
+html[data-workbench="ai"] .gkx-inbox-message-title {
+  display: inline-flex;
   align-items: flex-start;
+  flex: 0 1 auto;
   gap: 4px;
   min-width: 0;
+  max-width: 100%;
+  margin: 0;
   color: var(--gkx-control-text, #1d2129);
   font-size: 14px;
+  font-weight: 500;
   line-height: 22px;
   overflow-wrap: anywhere;
 }
 
-html[data-workbench="ai"] .gkx-inbox-item-title strong {
-  min-width: 0;
-  font-weight: 500;
-}
-
-html[data-workbench="ai"] .gkx-inbox-item-title img {
+html[data-workbench="ai"] .gkx-inbox-message-title img,
+html[data-workbench="ai"] .gkx-inbox-message-head > img {
+  display: block;
   flex: 0 0 auto;
   margin-top: 3px;
 }
 
-html[data-workbench="ai"] .gkx-inbox-item-summary {
+html[data-workbench="ai"] .gkx-inbox-message-state,
+html[data-workbench="ai"] .gkx-inbox-message-status {
+  flex: 0 0 auto;
+  margin-inline-start: auto;
+  padding-inline-start: 12px;
+  color: var(--gkx-control-placeholder, #86909c);
+  font-size: 12px;
+  line-height: 20px;
+  white-space: nowrap;
+}
+
+html[data-workbench="ai"] .gkx-inbox-message-body {
   margin: 0;
   color: var(--gkx-control-secondary, #4e5969);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 400;
-  line-height: 20px;
+  line-height: 22px;
   overflow-wrap: anywhere;
 }
 
-html[data-workbench="ai"] .gkx-inbox-item-footer {
+html[data-workbench="ai"] .gkx-inbox-message-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 8px 12px;
+  gap: 8px 16px;
   min-width: 0;
   padding-top: 12px;
   border-top: 1px solid var(--gkx-control-border, #e5e6eb);
 }
 
 html[data-workbench="ai"] .gkx-inbox-source,
-html[data-workbench="ai"] .gkx-inbox-open {
+html[data-workbench="ai"] .gkx-inbox-message-actions .link {
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -228,33 +197,39 @@ html[data-workbench="ai"] .gkx-inbox-source {
   overflow-wrap: anywhere;
 }
 
-html[data-workbench="ai"] .gkx-inbox-open {
-  color: var(--gkx-control-brand, #165dff);
-  white-space: nowrap;
+html[data-workbench="ai"] .gkx-inbox-message-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
 }
 
-html[data-workbench="ai"] .gkx-inbox :is(.gkx-inbox-source, .gkx-inbox-open, .gkx-inbox-close, .gkx-inbox-article-actions) img {
+html[data-workbench="ai"] .gkx-inbox-message-actions .link {
+  margin: 0;
+  padding: 0;
+  color: var(--gkx-control-brand, #165dff);
+  white-space: nowrap;
+  transition: color 100ms linear;
+}
+
+html[data-workbench="ai"] .gkx-inbox-message-actions .link:hover { color: var(--gkx-control-hover, #4080ff); }
+html[data-workbench="ai"] .gkx-inbox-message-actions .link:active { color: var(--gkx-control-active, #0e42d2); }
+
+html[data-workbench="ai"] .gkx-inbox :is(.gkx-inbox-source, .gkx-inbox-message-actions) img {
   display: block;
   flex: 0 0 auto;
 }
 
 html[data-workbench="ai"] .gkx-inbox-list-footer {
-  flex: 0 0 auto;
   margin-top: 16px;
   color: var(--gkx-control-secondary, #4e5969);
   font-size: 12px;
   line-height: 20px;
 }
 
-html[data-workbench="ai"] .gkx-inbox-reader {
-  min-width: 0;
-  min-height: 400px;
-  border: 1px solid var(--gkx-control-border, #e5e6eb);
-  border-radius: 2px;
-  background: #fff;
-}
-
-html[data-workbench="ai"] .gkx-inbox-reader-placeholder,
 html[data-workbench="ai"] .gkx-inbox-empty {
   display: flex;
   flex-direction: column;
@@ -267,146 +242,34 @@ html[data-workbench="ai"] .gkx-inbox-empty {
   overflow-wrap: anywhere;
 }
 
-html[data-workbench="ai"] .gkx-inbox-reader-placeholder { min-height: 398px; }
-html[data-workbench="ai"] .gkx-inbox-empty { min-height: 160px; }
-
-html[data-workbench="ai"] .gkx-inbox :is(.gkx-inbox-reader-placeholder, .gkx-inbox-empty) strong {
+html[data-workbench="ai"] .gkx-inbox-empty strong {
   color: var(--gkx-control-text, #1d2129);
   font-size: 14px;
   font-weight: 500;
   line-height: 22px;
 }
 
-html[data-workbench="ai"] .gkx-inbox :is(.gkx-inbox-reader-placeholder, .gkx-inbox-empty) p {
+html[data-workbench="ai"] .gkx-inbox-empty p {
   margin: 0;
   color: var(--gkx-control-placeholder, #86909c);
   font-size: 12px;
   line-height: 20px;
-}
-
-html[data-workbench="ai"] .gkx-inbox-article {
-  min-width: 0;
-  padding: 16px;
-  animation: gkxInboxReadIn 160ms ease-out;
-}
-
-html[data-workbench="ai"] .gkx-inbox-reader-toolbar {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px 16px;
-  min-width: 0;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--gkx-control-border, #e5e6eb);
-}
-
-html[data-workbench="ai"] .gkx-inbox-back { margin-inline-end: auto; }
-
-html[data-workbench="ai"] .gkx-inbox-close {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 32px;
-  width: 32px;
-  height: 32px;
-  padding: 8px;
-  border: 0;
-  border-radius: 2px;
-  background: transparent;
-  color: var(--gkx-control-secondary, #4e5969);
-  cursor: pointer;
-  transition: color 100ms linear, background-color 100ms linear;
-}
-
-html[data-workbench="ai"] .gkx-inbox-close:hover { background: var(--gkx-control-hover-fill, #f2f3f5); }
-html[data-workbench="ai"] .gkx-inbox-close:active { background: var(--gkx-control-border, #e5e6eb); }
-
-html[data-workbench="ai"] .gkx-inbox-article-header { margin-top: 16px; }
-
-html[data-workbench="ai"] .gkx-inbox-title {
-  margin: 0;
-  color: var(--gkx-control-text, #1d2129);
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 24px;
-  overflow-wrap: anywhere;
-}
-
-html[data-workbench="ai"] .gkx-inbox-meta {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px 16px;
-  margin-top: 8px;
-  color: var(--gkx-control-placeholder, #86909c);
-  font-size: 12px;
-  line-height: 20px;
-}
-
-html[data-workbench="ai"] .gkx-inbox-body {
-  max-width: 72ch;
-  margin-top: 16px;
-  color: var(--gkx-control-text, #1d2129);
-  font-size: 14px;
-  line-height: 28px;
-  overflow-wrap: anywhere;
-}
-
-html[data-workbench="ai"] .gkx-inbox-body p { margin: 0 0 16px; }
-html[data-workbench="ai"] .gkx-inbox-body p:last-child { margin-bottom: 0; }
-
-html[data-workbench="ai"] .gkx-inbox-article-actions {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px 16px;
-  margin-top: 24px;
-  padding-top: 16px;
-  border-top: 1px solid var(--gkx-control-border, #e5e6eb);
-}
-
-html[data-workbench="ai"] .gkx-inbox-article-actions :is(.btn, .link) {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
 }
 
 html[data-workbench="ai"] .gkx-inbox-return { margin-bottom: 16px; }
 
-html[data-workbench="ai"] .gkx-inbox :is(.gkx-inbox-tab, .gkx-inbox-item, .gkx-inbox-close):focus-visible {
+html[data-workbench="ai"] .gkx-inbox :is(.gkx-inbox-tab, .gkx-inbox-message-actions .link):focus-visible {
   outline: 2px solid #9bc2ff;
   outline-offset: 2px;
 }
 
-@keyframes gkxInboxReadIn {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@media (max-width: 900px) {
-  html[data-workbench="ai"] .gkx-inbox-layout {
-    grid-template-columns: minmax(0, 1fr);
-    min-height: 0;
-  }
-  html[data-workbench="ai"] .gkx-inbox-layout[data-reading="false"] .gkx-inbox-reader,
-  html[data-workbench="ai"] .gkx-inbox-layout[data-reading="true"] .gkx-inbox-list-panel { display: none; }
-  html[data-workbench="ai"] .gkx-inbox-layout[data-reading="true"] .gkx-inbox-reader { display: block; }
-  html[data-workbench="ai"] .gkx-inbox-reader { min-height: 0; }
-  html[data-workbench="ai"] .gkx-inbox-close { display: none; }
-}
-
 @media (max-width: 480px) {
-  html[data-workbench="ai"] .gkx-inbox-query { gap: 12px; }
   html[data-workbench="ai"] .gkx-inbox-search-label { flex-basis: 100%; max-width: none; }
   html[data-workbench="ai"] .gkx-inbox-toolbar { align-items: flex-start; }
   html[data-workbench="ai"] .gkx-inbox-tabs { width: 100%; }
   html[data-workbench="ai"] .gkx-inbox-tab { padding-inline: 8px; }
-  html[data-workbench="ai"] .gkx-inbox-item-footer { gap: 8px; }
-  html[data-workbench="ai"] .gkx-inbox-reader-toolbar { gap: 10px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html[data-workbench="ai"] .gkx-inbox :is(.gkx-inbox-tab, .gkx-inbox-item, .gkx-inbox-close) { transition: none; }
-  html[data-workbench="ai"] .gkx-inbox-article { animation: none; }
+  html[data-workbench="ai"] .gkx-inbox :is(.gkx-inbox-tab, .gkx-inbox-message-actions .link) { transition: none; }
 }

@@ -44,12 +44,28 @@
     img.alt = ''; img.width = 12; img.height = 12; return img;
   }
   function isVisible(node) { return !!node?.isConnected && !node.closest('[hidden]'); }
+  function resolveActions(table, source) {
+    const value = typeof source === 'function' ? source(table) : source;
+    if (value == null) return [];
+    const nodes = [...new Set((Array.isArray(value) ? value : [value]).filter(node => node instanceof Element))];
+    for (const node of nodes) {
+      if (node.ownerDocument !== table.ownerDocument) throw new Error('Table operations must belong to the same document');
+      if (node === table || node.contains(table) || table.contains(node)) throw new Error('Table operations must be outside the managed table');
+      if (node.matches('form') || node.querySelector('form')) throw new Error('Table operations must not contain a form');
+      if (nodes.some(other => other !== node && node.contains(other))) throw new Error('Table operations must not overlap');
+      const owner = node.closest('.gkx-table-list');
+      if (owner && owner.dataset.tableId !== table.id) throw new Error('Table operations already belong to another list');
+    }
+    return nodes;
+  }
   function mount(table, config = {}) {
     if (!(table instanceof HTMLTableElement) || table.hasAttribute('data-gkx-table-exclude')) return null;
     if (controllers.has(table)) { const existing = controllers.get(table); existing.refresh({ reason: 'data' }); return existing; }
     const id = config.id || table.id;
     if (!id) throw new Error('Managed tables require a stable id');
     table.id = id;
+    const operationNodes = resolveActions(table, config.actions);
+    const focusedOperation = operationNodes.some(node => node.contains(document.activeElement)) ? document.activeElement : null;
     const label = config.label || '记录';
     const state = states.get(id) || { query: '', filters: {}, page: 1, pageSize: 10 };
     states.set(id, state);
@@ -83,6 +99,16 @@
     const actions = element('div', 'gkx-table-query-actions');
     const submit = button('查询', 'btn primary'); submit.type = 'submit';
     const reset = button('重置'); reset.type = 'reset'; actions.append(submit, reset); form.append(fields, actions);
+    const toolbar = element('div', 'gkx-table-toolbar'); toolbar.append(form);
+    if (operationNodes.length) {
+      const operations = element('div', 'gkx-table-operations');
+      for (const node of operationNodes) {
+        const buttons = [...(node.matches('button') ? [node] : []), ...node.querySelectorAll('button')];
+        buttons.forEach(control => { if (!control.hasAttribute('type')) control.type = 'button'; });
+        operations.append(node);
+      }
+      toolbar.append(operations);
+    }
     const footer = element('footer', 'gkx-table-footer');
     const count = element('output', 'gkx-table-count'); count.setAttribute('aria-live', 'polite'); count.setAttribute('aria-atomic', 'true');
     const pager = element('nav', 'gkx-table-pagination'); pager.setAttribute('aria-label', label + '分页');
@@ -98,7 +124,11 @@
     jump.id = id + '-jump'; jumpLabel.htmlFor = jump.id; jump.setAttribute('aria-label', label + '页码');
     const jumpButton = button('跳转'); jumpButton.type = 'submit'; jumpForm.append(jumpLabel, jump, element('span', '', '页'), jumpButton);
     pager.append(prev, numbers, next, sizeLabel, jumpForm); footer.append(count, pager);
-    shell.append(form, wrap, footer);
+    shell.append(toolbar, wrap, footer);
+    if (focusedOperation && (document.activeElement === document.body || !document.activeElement)
+      && isVisible(focusedOperation) && !focusedOperation.disabled && !focusedOperation.closest('[inert]')) {
+      focusedOperation.focus({ preventScroll: true });
+    }
     let allRows = [], shownRows = [], snapshot = null, callbackPending = false, lastReason = 'mount';
     let emptyRow = null;
     function collect() {

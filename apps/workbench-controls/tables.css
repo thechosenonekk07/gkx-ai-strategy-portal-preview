@@ -2,6 +2,7 @@
    Existing table rows, sticky operation cells, and business actions stay owned
    by surfaces.css and each workbench. */
 html[data-workbench] .gkx-table-list {
+  container: gkx-table-list / inline-size;
   min-width: 0;
   max-width: 100%;
   margin: 0;
@@ -13,26 +14,65 @@ html[data-workbench] .gkx-table-list {
   line-height: 22px;
 }
 
-html[data-workbench] .gkx-table-list .gkx-table-query {
+html[data-workbench] .gkx-table-list > .gkx-table-toolbar {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  justify-content: space-between;
   flex-wrap: wrap;
   min-width: 0;
   max-width: 100%;
   margin: 0 0 16px;
   padding: 0;
-  gap: 16px;
+  gap: 12px 16px;
 }
 
-html[data-workbench] .gkx-table-list .gkx-table-fields {
+html[data-workbench] .gkx-table-list .gkx-table-query {
   display: flex;
   align-items: center;
   flex: 0 1 auto;
   flex-wrap: wrap;
   min-width: 0;
   max-width: 100%;
-  column-gap: 24px;
-  row-gap: 16px;
+  margin: 0;
+  padding: 0;
+  gap: 12px 24px;
+}
+
+html[data-workbench] .gkx-table-list .gkx-table-fields {
+  display: contents;
+}
+
+html[data-workbench] .gkx-table-list .gkx-table-operations,
+html[data-workbench] .gkx-table-list .gkx-table-operations > :is(.row, .gkx-list-toolbar, .gkx-list-actions) {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  gap: 12px 16px;
+}
+
+/* Moving an existing action group must not retain its old end-alignment. */
+html[data-workbench] .gkx-table-list .gkx-table-operations > *,
+html[data-workbench] .gkx-table-list .gkx-table-operations > :is(.row, .gkx-list-toolbar, .gkx-list-actions) > * {
+  margin-inline-start: 0 !important;
+}
+
+html[data-workbench] .gkx-table-list .gkx-table-operations .btn {
+  flex: 0 0 auto;
+  min-width: 0;
+  height: 32px;
+  font-size: 14px;
+  line-height: 22px;
+  white-space: nowrap;
+}
+
+html[data-workbench] .gkx-table-list .gkx-table-operations [hidden] {
+  display: none !important;
 }
 
 html[data-workbench] .gkx-table-list .gkx-table-field {
@@ -318,8 +358,18 @@ html[data-workbench] .gkx-table-list .gkx-table-empty .btn {
   margin-top: 16px;
 }
 
+/* Reserve the first line for business actions without forcing all filters onto
+   that line. Narrow lists retain the natural left-aligned wrap above. */
+@container gkx-table-list (min-width: 800px) {
+  html[data-workbench] .gkx-table-list > .gkx-table-toolbar:has(> .gkx-table-operations) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+  }
+}
+
 @media (max-width: 600px) {
-  html[data-workbench] .gkx-table-list .gkx-table-fields,
+  html[data-workbench] .gkx-table-list .gkx-table-query,
   html[data-workbench] .gkx-table-list .gkx-table-field {
     flex: 1 1 100%;
     width: 100%;

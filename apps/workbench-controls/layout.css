@@ -1,0 +1,161 @@
+/* Explicit result cards; editing paragraphs and version navigation are unchanged.
+   Card surface/density follows the archived message card at 2353:10740. */
+html[data-workbench] .gkx-result-grid {
+  container: gkx-results / inline-size;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 640px));
+  align-items: start;
+  gap: 16px;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+html[data-workbench] .gkx-filter-form + .gkx-result-grid { margin-top: 16px; }
+
+/* A heading shares one baseline with its sibling count, status, or actions. */
+html[data-workbench] .row.between > .section-title { margin-block: 0; }
+
+html[data-workbench] .gkx-result-grid > .feed-item {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  grid-column: 1 / -1;
+  gap: 8px;
+  min-width: 0;
+  width: 100%;
+  max-width: 640px;
+  margin: 0;
+  padding: 16px;
+  border: 1px solid #e5e6eb;
+  border-radius: 2px;
+  background: #fff;
+  color: #1d2129;
+  box-shadow: none;
+  overflow-wrap: anywhere;
+}
+
+html[data-workbench] .gkx-result-grid > .feed-item:last-child { border-bottom: 1px solid #e5e6eb; }
+html[data-workbench] .gkx-result-grid > .feed-item[hidden] { display: none !important; }
+
+html[data-workbench] .gkx-result-grid > .feed-item > .row {
+  align-items: flex-start;
+  min-width: 0;
+  gap: 8px 12px;
+}
+
+html[data-workbench] .gkx-result-grid .feed-title {
+  display: block;
+  min-width: 0;
+  color: #1d2129;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  overflow-wrap: anywhere;
+}
+
+html[data-workbench] .gkx-result-grid > .feed-item > .row > .feed-title { flex: 1 1 0; }
+
+html[data-workbench] .gkx-result-grid .feed-meta {
+  margin: 0;
+  color: #86909c;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 20px;
+  overflow-wrap: anywhere;
+}
+
+html[data-workbench] .gkx-result-grid > .feed-item > p {
+  margin: 0;
+  color: #4e5969;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 20px;
+  overflow-wrap: anywhere;
+}
+
+html[data-workbench] .gkx-result-grid > .feed-item > .feed-meta + p { margin-top: 4px; }
+
+html[data-workbench] .gkx-result-grid > :is(.empty, .gkx-empty) {
+  grid-column: 1 / -1;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+@container gkx-results (min-width: 800px) {
+  html[data-workbench] .gkx-result-grid > .feed-item {
+    grid-column: auto;
+    max-width: none;
+  }
+
+  html[data-workbench] .gkx-result-grid > .feed-item:only-child {
+    grid-column: 1 / -1;
+    max-width: 640px;
+  }
+}
+
+/* Quiet hours retains its native checkbox behavior with the original 28×16 assets. */
+html[data-workbench="ai"] .gkx-switch-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  margin: 0;
+  color: #1d2129;
+  font-size: 14px;
+  line-height: 22px;
+  cursor: pointer;
+}
+
+html[data-workbench="ai"] input.gkx-switch.gkx-switch,
+html[data-workbench="ai"] input.gkx-switch.gkx-switch:is(:hover, :checked, :indeterminate, :disabled) {
+  --gkx-switch-asset: url("figma-assets/switch-off.svg");
+  -webkit-appearance: none;
+  appearance: none;
+  display: inline-block;
+  flex: 0 0 28px;
+  min-width: 28px;
+  width: 28px;
+  height: 16px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent var(--gkx-switch-asset) center / 28px 16px no-repeat;
+  box-shadow: none;
+  vertical-align: middle;
+  cursor: pointer;
+  transition: opacity 100ms linear;
+}
+
+html[data-workbench="ai"] input.gkx-switch.gkx-switch:checked {
+  --gkx-switch-asset: url("figma-assets/switch-on.svg");
+}
+
+html[data-workbench="ai"] input.gkx-switch.gkx-switch::before,
+html[data-workbench="ai"] input.gkx-switch.gkx-switch::after,
+html[data-workbench="ai"] input.gkx-switch.gkx-switch:checked::before,
+html[data-workbench="ai"] input.gkx-switch.gkx-switch:checked::after {
+  content: none;
+  display: none;
+}
+
+html[data-workbench="ai"] input.gkx-switch.gkx-switch:hover { opacity: .85; }
+
+html[data-workbench="ai"] input.gkx-switch.gkx-switch:focus-visible {
+  outline: 2px solid #165dff;
+  outline-offset: 3px;
+  box-shadow: none;
+}
+
+html[data-workbench="ai"] input.gkx-switch.gkx-switch:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-workbench="ai"] input.gkx-switch.gkx-switch { transition: none; }
+}
