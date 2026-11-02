@@ -1,0 +1,345 @@
+/* Opt-in table search and pagination, using the archived Figma list controls.
+   Existing table rows, sticky operation cells, and business actions stay owned
+   by surfaces.css and each workbench. */
+html[data-workbench] .gkx-table-list {
+  min-width: 0;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: #fff;
+  color: #1d2129;
+  font-size: 14px;
+  line-height: 22px;
+}
+
+html[data-workbench] .gkx-table-list .gkx-table-query {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0 0 16px;
+  padding: 0;
+  gap: 16px;
+}
+
+html[data-workbench] .gkx-table-list .gkx-table-fields {
+  display: flex;
+  align-items: center;
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  min-width: 0;
+  max-width: 100%;
+  column-gap: 24px;
+  row-gap: 16px;
+}
+
+html[data-workbench] .gkx-table-list .gkx-table-field {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0;
+  gap: 8px;
+  color: #1d2129;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+}
+
+html[data-workbench] .gkx-table-list .gkx-table-label {
+  flex: 0 0 auto;
+  margin: 0;
+  white-space: nowrap;
+}
+
+html[data-workbench] .gkx-table-list .gkx-table-field > :is(.control, .gkx-field, .gkx-text-input, .gkx-select) {
+  box-sizing: border-box;
+  flex: 0 1 var(--gkx-table-field-width, 280px);
+  min-width: 0;
+  max-width: 100%;
+  width: var(--gkx-table-field-width, 280px);
+  height: 32px;
+  margin: 0;
+}
+
+html[data-workbench] .gkx-table-list .gkx-table-field > :is(select.control, .gkx-select) {
+  flex-basis: var(--gkx-table-field-width, 160px);
+  width: var(--gkx-table-field-width, 160px);
+}
+
+html[data-workbench] .gkx-table-list .gkx-table-field > .gkx-field-error {
+  flex: 0 0 100%;
+  order: 1;
+  margin-top: 0;
+}
+
+html[data-workbench] .gkx-table-list .gkx-table-query-actions {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  min-width: 0;
+  max-width: 100%;
+  gap: 10px;
+}
+
+html[data-workbench] .gkx-table-list :is(.gkx-table-query-actions, .gkx-page-jump, .gkx-table-empty) .btn {
+  flex: 0 0 auto;
+  min-width: 0;
+  height: 32px;
+  padding: 0 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  white-space: nowrap;
+}
+
+/* Native fallbacks share the enhanced control's geometry and state colors. */
+html[data-workbench] .gkx-table-list :is(.gkx-table-query, .gkx-table-footer) :is(input.control, select.control) {
+  box-sizing: border-box;
+  min-width: 0;
+  height: 32px;
+  margin: 0;
+  padding: 0 12px;
+  border: 1px solid #e5e6eb;
+  border-radius: 4px;
+  background: #fff;
+  color: #1d2129;
+  font: inherit;
+  font-size: 14px;
+  line-height: 22px;
+}
+
+html[data-workbench] .gkx-table-list :is(.gkx-table-query, .gkx-table-footer) :is(input.control, select.control):hover {
+  border-color: #c9cdd4;
+}
+
+html[data-workbench] .gkx-table-list :is(.gkx-table-query, .gkx-table-footer) :is(input.control, select.control):focus {
+  border-color: #4080ff;
+  outline: none;
+  box-shadow: none;
+}
+
+html[data-workbench] .gkx-table-list :is(.gkx-table-query, .gkx-table-footer) :is(input.control, select.control):is(:disabled, [readonly]) {
+  border-color: #e5e6eb;
+  background: #f7f8fa;
+  color: #4e5969;
+}
+
+html[data-workbench] .gkx-table-list :is(.gkx-table-query, .gkx-table-footer) :is(input.control, select.control)[aria-invalid="true"] {
+  border-color: #f53f3f;
+  background: #fff;
+}
+
+html[data-workbench] .gkx-table-list :is(.gkx-table-query, .gkx-table-footer) .gkx-text-input.has-clear > input.control {
+  padding-right: 40px;
+}
+
+/* Preserve the original scroll container and all existing table styling. */
+html[data-workbench] .gkx-table-list > .table-wrap {
+  min-width: 0;
+  max-width: 100%;
+  margin: 0;
+}
+
+html[data-workbench] .gkx-table-list .gkx-table-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  min-width: 0;
+  max-width: 100%;
+  margin: 16px 0 0;
+  padding: 0;
+  gap: 16px;
+  color: #1d2129;
+  font-size: 14px;
+  line-height: 22px;
+}
+
+html[data-workbench] .gkx-table-list .gkx-table-count {
+  display: block;
+  flex: 0 1 auto;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  color: #1d2129;
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+html[data-workbench] .gkx-table-list .gkx-table-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  min-width: 0;
+  max-width: 100%;
+  margin-left: auto;
+  gap: 8px;
+}
+
+html[data-workbench] .gkx-table-list .gkx-table-pages {
+  display: flex;
+  align-items: center;
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  min-width: 0;
+  max-width: 100%;
+  gap: 8px;
+}
+
+html[data-workbench] .gkx-table-list .gkx-page-button,
+html[data-workbench] .gkx-table-list .gkx-page-ellipsis {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 32px;
+  min-width: 32px;
+  width: 32px;
+  height: 32px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 2px;
+  background: transparent;
+  color: #4e5969;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 22px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+html[data-workbench] .gkx-table-list .gkx-page-button {
+  cursor: pointer;
+  transition: background-color 100ms linear, color 100ms linear;
+}
+
+html[data-workbench] .gkx-table-list .gkx-page-button:not([aria-current="page"]):not(:disabled):not([aria-disabled="true"]):hover {
+  background: #f2f3f5;
+}
+
+html[data-workbench] .gkx-table-list .gkx-page-button:not([aria-current="page"]):not(:disabled):not([aria-disabled="true"]):active {
+  background: #e5e6eb;
+}
+
+html[data-workbench] .gkx-table-list .gkx-page-button[aria-current="page"],
+html[data-workbench] .gkx-table-list .gkx-page-button[aria-current="page"]:is(:hover, :active) {
+  background: #e8f3ff;
+  color: #165dff;
+}
+
+html[data-workbench] .gkx-table-list .gkx-page-button:focus-visible {
+  outline: 2px solid #165dff;
+  outline-offset: 2px;
+}
+
+html[data-workbench] .gkx-table-list .gkx-page-button:is(:disabled, [aria-disabled="true"]) {
+  background: transparent;
+  color: #c9cdd4;
+  cursor: not-allowed;
+}
+
+html[data-workbench] .gkx-table-list .gkx-page-size,
+html[data-workbench] .gkx-table-list .gkx-page-jump {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  flex-wrap: nowrap;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0;
+  gap: 8px;
+  color: #1d2129;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  white-space: nowrap;
+}
+
+html[data-workbench] .gkx-table-list .gkx-page-size > :is(.control, .gkx-select) {
+  flex: 0 0 104px;
+  min-width: 0;
+  width: 104px;
+  height: 32px;
+}
+
+html[data-workbench] .gkx-table-list .gkx-page-jump > :is(.control, .gkx-text-input) {
+  flex: 0 0 72px;
+  min-width: 0;
+  width: 72px;
+  height: 32px;
+}
+
+html[data-workbench] .gkx-table-list .gkx-page-jump > .gkx-text-input {
+  flex-basis: 88px;
+  width: 88px;
+}
+
+html[data-workbench] .gkx-table-list .gkx-page-jump input.control {
+  padding-inline: 8px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+html[data-workbench] .gkx-table-list .gkx-page-jump .gkx-text-input.has-clear > input.control {
+  padding-right: 40px;
+}
+
+html[data-workbench] .gkx-table-list .table-wrap tbody .gkx-table-empty > td {
+  height: auto;
+  padding: 32px 16px;
+  background: #fff;
+  color: #86909c;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  text-align: center;
+  white-space: normal;
+}
+
+html[data-workbench] .gkx-table-list .gkx-table-empty p {
+  margin: 0;
+  line-height: 22px;
+  overflow-wrap: anywhere;
+}
+
+html[data-workbench] .gkx-table-list .gkx-table-empty .btn {
+  margin-top: 16px;
+}
+
+@media (max-width: 600px) {
+  html[data-workbench] .gkx-table-list .gkx-table-fields,
+  html[data-workbench] .gkx-table-list .gkx-table-field {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+
+  html[data-workbench] .gkx-table-list .gkx-table-field > :is(.control, .gkx-field, .gkx-text-input, .gkx-select) {
+    flex: 1 1 160px;
+    width: auto;
+  }
+
+  html[data-workbench] .gkx-table-list .gkx-table-pagination {
+    justify-content: flex-start;
+    flex: 1 1 100%;
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-workbench] .gkx-table-list .gkx-page-button {
+    transition: none;
+  }
+}
