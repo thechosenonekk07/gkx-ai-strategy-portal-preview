@@ -159,3 +159,59 @@ html[data-workbench="ai"] input.gkx-switch.gkx-switch:disabled {
 @media (prefers-reduced-motion: reduce) {
   html[data-workbench="ai"] input.gkx-switch.gkx-switch { transition: none; }
 }
+
+/* Forms adapt to the space of the work area, not the browser screen. Only the
+   identified capped primary forms opt in; short settings keep readable widths. */
+html[data-workbench="ai"] .gkx-collect-layout {
+  container: gkx-collect / inline-size;
+  min-width: 0;
+  width: 100%;
+}
+
+html[data-workbench="ai"] .gkx-collect-form {
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 16px 24px;
+}
+
+html[data-workbench="ai"] .gkx-collect-form > * { min-width: 0; }
+html[data-workbench="ai"] .gkx-collect-form > #clueResult { grid-column: 1 / -1; overflow-wrap: anywhere; }
+
+@container gkx-collect (min-width: 800px) {
+  html[data-workbench="ai"] .gkx-collect-form { grid-template-columns: minmax(200px, 1fr) minmax(0, 3fr); }
+  html[data-workbench="ai"] .gkx-collect-kind { grid-column: 1; grid-row: 1; }
+  html[data-workbench="ai"] .gkx-collect-description { grid-column: 2; grid-row: 1; }
+  html[data-workbench="ai"] .gkx-collect-actions { grid-column: 2; }
+}
+
+html[data-workbench="ai"] .gkx-broadcast-workspace {
+  container: gkx-broadcast / inline-size;
+  min-width: 0;
+  width: 100%;
+}
+
+html[data-workbench="ai"] .gkx-broadcast-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 24px;
+}
+
+html[data-workbench="ai"] .gkx-work-panel {
+  min-width: 0;
+  margin: 0;
+  padding: 16px;
+  border: 1px solid #e5e6eb;
+  border-radius: 2px;
+  background: #fff;
+}
+
+html[data-workbench="ai"] .gkx-work-panel > .section-title { margin-top: 0; }
+
+/* 320px for composing and at least ~680px for the existing managed list after
+   panel padding; below this width the two tasks retain their natural order. */
+@container gkx-broadcast (min-width: 1080px) {
+  html[data-workbench="ai"] .gkx-broadcast-grid {
+    grid-template-columns: minmax(320px, .8fr) minmax(0, 1.7fr);
+  }
+}
