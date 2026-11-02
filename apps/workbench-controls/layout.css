@@ -3,7 +3,7 @@
 html[data-workbench] .gkx-result-grid {
   container: gkx-results / inline-size;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 640px));
+  grid-template-columns: minmax(0, 1fr);
   align-items: start;
   gap: 16px;
   min-width: 0;
@@ -25,7 +25,7 @@ html[data-workbench] .gkx-result-grid > .feed-item {
   gap: 8px;
   min-width: 0;
   width: 100%;
-  max-width: 640px;
+  max-width: none;
   margin: 0;
   padding: 16px;
   border: 1px solid #e5e6eb;
@@ -83,18 +83,6 @@ html[data-workbench] .gkx-result-grid > :is(.empty, .gkx-empty) {
   max-width: 100%;
   margin: 0;
   overflow-wrap: anywhere;
-}
-
-@container gkx-results (min-width: 800px) {
-  html[data-workbench] .gkx-result-grid > .feed-item {
-    grid-column: auto;
-    max-width: none;
-  }
-
-  html[data-workbench] .gkx-result-grid > .feed-item:only-child {
-    grid-column: 1 / -1;
-    max-width: 640px;
-  }
 }
 
 /* Quiet hours retains its native checkbox behavior with the original 28×16 assets. */
@@ -160,58 +148,87 @@ html[data-workbench="ai"] input.gkx-switch.gkx-switch:disabled {
   html[data-workbench="ai"] input.gkx-switch.gkx-switch { transition: none; }
 }
 
-/* Forms adapt to the space of the work area, not the browser screen. Only the
-   identified capped primary forms opt in; short settings keep readable widths. */
-html[data-workbench="ai"] .gkx-collect-layout {
-  container: gkx-collect / inline-size;
-  min-width: 0;
-  width: 100%;
-}
+/* Sequential tasks stay in document order at every viewport width. */
+html[data-workbench="ai"] .gkx-collect-layout,
+html[data-workbench="ai"] .gkx-broadcast-workspace { min-width: 0; width: 100%; }
 
 html[data-workbench="ai"] .gkx-collect-form {
   grid-template-columns: minmax(0, 1fr);
   align-items: start;
-  gap: 16px 24px;
+  gap: 16px;
 }
+html[data-workbench="ai"] .gkx-collect-form > * { min-width: 0; grid-column: 1; grid-row: auto; }
+html[data-workbench="ai"] .gkx-collect-kind { width: 100%; max-width: 280px; }
+html[data-workbench="ai"] .gkx-collect-form > #clueResult { overflow-wrap: anywhere; }
 
-html[data-workbench="ai"] .gkx-collect-form > * { min-width: 0; }
-html[data-workbench="ai"] .gkx-collect-form > #clueResult { grid-column: 1 / -1; overflow-wrap: anywhere; }
-
-@container gkx-collect (min-width: 800px) {
-  html[data-workbench="ai"] .gkx-collect-form { grid-template-columns: minmax(200px, 1fr) minmax(0, 3fr); }
-  html[data-workbench="ai"] .gkx-collect-kind { grid-column: 1; grid-row: 1; }
-  html[data-workbench="ai"] .gkx-collect-description { grid-column: 2; grid-row: 1; }
-  html[data-workbench="ai"] .gkx-collect-actions { grid-column: 2; }
-}
-
-html[data-workbench="ai"] .gkx-broadcast-workspace {
-  container: gkx-broadcast / inline-size;
-  min-width: 0;
-  width: 100%;
-}
-
-html[data-workbench="ai"] .gkx-broadcast-grid {
+html[data-workbench="ai"] .gkx-broadcast-grid,
+html[data-workbench="ai"] .gkx-detail-flow {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   align-items: start;
   gap: 24px;
 }
-
-html[data-workbench="ai"] .gkx-work-panel {
+html[data-workbench="ai"] .gkx-flow-section {
   min-width: 0;
   margin: 0;
-  padding: 16px;
-  border: 1px solid #e5e6eb;
-  border-radius: 2px;
-  background: #fff;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+html[data-workbench="ai"] .gkx-flow-section > .section-title { margin-top: 0; }
+
+/* Short source selectors have a readable width; free text uses the remaining
+   condition-row space. Paired selectors are one stage, not separate tasks. */
+html[data-workbench="ai"] .rule-group { container: gkx-rule / inline-size; }
+html[data-workbench="ai"] .rule-group .source-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 584px;
+  gap: 16px 24px;
+}
+html[data-workbench="ai"] .rule-group .source-grid > .field { width: 100%; max-width: 280px; }
+html[data-workbench="ai"] .rule-group .condition {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 8px;
+}
+html[data-workbench="ai"] .rule-group .condition-label,
+html[data-workbench="ai"] .rule-group .condition > :is(input, .gkx-text-input) { grid-column: 1 / -1; }
+html[data-workbench="ai"] .rule-group .gkx-condition-actions { margin-top: 16px; }
+@container gkx-rule (min-width: 584px) {
+  html[data-workbench="ai"] .rule-group .source-grid { grid-template-columns: repeat(2, minmax(0, 280px)); }
+}
+@container gkx-rule (min-width: 720px) {
+  html[data-workbench="ai"] .rule-group .condition { grid-template-columns: 72px minmax(160px, 280px) 112px minmax(160px, 1fr); }
+  html[data-workbench="ai"] .rule-group .condition-label,
+  html[data-workbench="ai"] .rule-group .condition > :is(input, .gkx-text-input) { grid-column: auto; }
 }
 
-html[data-workbench="ai"] .gkx-work-panel > .section-title { margin-top: 0; }
-
-/* 320px for composing and at least ~680px for the existing managed list after
-   panel padding; below this width the two tasks retain their natural order. */
-@container gkx-broadcast (min-width: 1080px) {
-  html[data-workbench="ai"] .gkx-broadcast-grid {
-    grid-template-columns: minmax(320px, .8fr) minmax(0, 1.7fr);
-  }
+/* Version selection is a master-detail task; the reading pane keeps both
+   drafts in their original vertical order. 640 = 220 navigation + 16 gap +
+   404 reading space, based on the available work area rather than the screen. */
+html[data-workbench="voice"] .voice-history-workspace {
+  container: gkx-voice-history / inline-size;
+  min-width: 0;
+  width: 100%;
 }
+html[data-workbench="voice"] .voice-history-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 16px;
+}
+html[data-workbench="voice"] .voice-history-layout > * { min-width: 0; }
+html[data-workbench="voice"] .voice-history-heading { margin-bottom: 16px; }
+@container gkx-voice-history (min-width: 640px) {
+  html[data-workbench="voice"] .voice-history-layout { grid-template-columns: 220px minmax(0, 1fr); }
+}
+
+/* Read the contract, submit/query a task, then inspect its logs. */
+html[data-workbench="voice"] .voice-integration-flow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 24px;
+}
+html[data-workbench="voice"] .voice-integration-flow > * { min-width: 0; }

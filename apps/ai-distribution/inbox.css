@@ -10,10 +10,10 @@ html[data-workbench="ai"] .gkx-inbox {
 }
 
 html[data-workbench="ai"] .gkx-inbox-tools {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px 24px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 16px;
   min-width: 0;
   margin-bottom: 16px;
 }
@@ -60,7 +60,7 @@ html[data-workbench="ai"] .gkx-inbox-toolbar {
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  flex: 1 1 320px;
+  flex: initial;
   gap: 12px 16px;
   min-width: 0;
   margin: 0;
@@ -274,27 +274,6 @@ html[data-workbench="ai"] .gkx-inbox-return { margin-bottom: 16px; }
 html[data-workbench="ai"] .gkx-inbox :is(.gkx-inbox-tab, .gkx-inbox-message-actions .link):focus-visible {
   outline: 2px solid #9bc2ff;
   outline-offset: 2px;
-}
-
-/* A short notification is a compact row on a wide workspace, rather than a
-   tall card with an empty trailing column or a duplicate reading pane. */
-@container gkx-inbox (min-width: 960px) {
-  html[data-workbench="ai"] .gkx-inbox-notification {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 4px 24px;
-  }
-
-  html[data-workbench="ai"] .gkx-inbox-message-head { grid-column: 1; }
-  html[data-workbench="ai"] .gkx-inbox-message-body { grid-column: 1; max-inline-size: 72ch; }
-
-  html[data-workbench="ai"] .gkx-inbox-message-footer {
-    grid-column: 2;
-    grid-row: 1 / span 2;
-    align-self: center;
-    padding: 0;
-    border: 0;
-  }
 }
 
 @container gkx-inbox (max-width: 480px) {
