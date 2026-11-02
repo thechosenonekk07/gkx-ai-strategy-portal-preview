@@ -22,7 +22,7 @@ html.portal-embedded .app-strip { gap: 8px; }
   html.portal-embedded .shell { grid-template-rows: 0px 36px 44px minmax(0, 1fr); }
 }
 </style>
-<link rel="stylesheet" href="design-adapter.css?v=20261102-global-surfaces">
+<link rel="stylesheet" href="design-adapter.css?v=20261102-topology-integration">
 <link rel="stylesheet" href="../workbench-controls/controls.css?v=20261030-intel">
 <link rel="stylesheet" href="../workbench-controls/surfaces.css?v=20261102-global-surfaces">
 </head>
@@ -35,8 +35,24 @@ html.portal-embedded .app-strip { gap: 8px; }
 </div>
 <div class="drawer-mask" id="drawerMask"></div><aside class="drawer" id="drawer" aria-label="详情面板"></aside><div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script>
+const topologyNodes=Object.freeze([
+ ['业务系统 A','正常','10:46:21','10:46:20','38 ms','0'],
+ ['业务系统 B','正常','10:46:20','10:46:18','62 ms','0'],
+ ['业务系统 C','延迟','10:45:10','10:41:52','428 ms','2'],
+ ['业务系统 D','正常','10:46:19','10:46:16','51 ms','0'],
+ ['业务系统 E','离线','10:40:12','10:33:04','—','6'],
+ ['业务系统 F','正常','10:46:17','10:46:15','73 ms','0'],
+ ['业务系统 G','正常','10:46:16','10:46:14','95 ms','0'],
+ ['业务系统 H','正常','10:46:15','10:46:12','66 ms','0']
+].map(row=>Object.freeze(row)));
+const topologyTone=row=>row[1]==='离线'?'error':row[1]==='延迟'?'warn':'normal';
+function renderTopology(){
+ const node=(row,index,column)=>`<button type="button" class="top-node" data-node="${index}" data-tone="${topologyTone(row)}" aria-haspopup="dialog" aria-controls="drawer" aria-expanded="false" style="grid-column:${column};grid-row:${index%4+1}"><span class="top-node-head"><span class="top-node-title"><span class="top-node-tile" aria-hidden="true">${String.fromCharCode(65+index)}</span><strong>${row[0]}</strong></span><span class="status ${topologyTone(row)==='normal'?'':topologyTone(row)}">${row[1]}</span></span><span class="top-node-meta"><span>心跳 <span class="top-node-value">${row[2]}</span></span><span>采集 <span class="top-node-value">${row[3]}</span></span></span><span class="top-node-meta"><span>延迟 <span class="top-node-value">${row[4]}</span></span><span>异常 <span class="top-node-value">${row[5]}</span></span></span></button>`;
+ const links=topologyNodes.map((row,index)=>`<g class="topology-link" data-link-node="${index}" data-tone="${topologyTone(row)}"><path class="topology-path"/><circle class="topology-port topology-port-node" r="3"/><circle class="topology-port topology-port-hub" r="3"/></g>`).join('');
+ return `<div class="section"><div class="metrics topology-metrics" role="group" aria-label="接入状态统计"><div class="metric"><label>已接入子系统</label><strong>8</strong><small>业务系统 A–H</small></div><div class="metric"><label>当前正常</label><strong>6</strong><small>连接状态正常的子系统</small></div><div class="metric"><label>需关注</label><strong>2</strong><small>延迟 1 · 离线 1</small></div></div><div class="topology-grid topology-canvas" role="group" aria-label="八个业务系统与关键数据中台的接入关系"><svg class="topology-wires" aria-hidden="true" focusable="false">${links}</svg>${topologyNodes.slice(0,4).map((row,index)=>node(row,index,1)).join('')}<div class="hub-grid"><strong>关键数据中台</strong><span class="status">连接正常</span></div>${topologyNodes.slice(4).map((row,index)=>node(row,index+4,3)).join('')}</div></div>`;
+}
 const pages=[
- {id:'topology',group:'业务数据抓取与接入',name:'底层接入状态雷达拓扑图',desc:'实时查看八个业务系统与中台的连接健康度和心跳状态。',body:()=>{const data=[['业务系统 A','正常','10:46:21','10:46:20','38 ms','0'],['业务系统 B','正常','10:46:20','10:46:18','62 ms','0'],['业务系统 C','延迟','10:45:10','10:41:52','428 ms','2'],['业务系统 D','正常','10:46:19','10:46:16','51 ms','0'],['业务系统 E','离线','10:40:12','10:33:04','—','6'],['业务系统 F','正常','10:46:17','10:46:15','73 ms','0'],['业务系统 G','正常','10:46:16','10:46:14','95 ms','0'],['业务系统 H','正常','10:46:15','10:46:12','66 ms','0']];const node=(r,i,col)=>`<button class=\"top-node\" data-node=\"${i}\" style=\"grid-column:${col};grid-row:${i%4+1}\"><span class=\"top-node-head\"><strong>${r[0]}</strong><span class=\"status ${r[1]==='离线'?'error':r[1]==='延迟'?'warn':''}\">${r[1]}</span></span><span class=\"top-node-meta\"><span>心跳 ${r[2]}</span><span>采集 ${r[3]}</span></span><span class=\"top-node-meta\"><span>延迟 ${r[4]}</span><span>异常 ${r[5]}</span></span></button>`;return `<div class=\"section\"><div class=\"metrics topology-metrics\" role=\"group\" aria-label=\"接入状态统计\"><div class=\"metric\"><label>已接入子系统</label><strong>8</strong><small>业务系统 A–H</small></div><div class=\"metric\"><label>当前正常</label><strong>6</strong><small>连接状态正常的子系统</small></div><div class=\"metric\"><label>需关注</label><strong>2</strong><small>延迟 1 · 离线 1</small></div></div><div class=\"topology-grid\"><svg class=\"topology-wires\" viewBox=\"0 0 1000 420\" preserveAspectRatio=\"none\" aria-hidden=\"true\">${[50,157,263,370].map(y=>`<line x1=\"500\" y1=\"210\" x2=\"300\" y2=\"${y}\"/><line x1=\"500\" y1=\"210\" x2=\"700\" y2=\"${y}\"/>`).join('')}</svg>${data.slice(0,4).map((r,i)=>node(r,i,1)).join('')}<div class=\"hub-grid\"><strong>关键数据中台</strong><span class=\"status\">连接正常</span></div>${data.slice(4).map((r,i)=>node(r,i+4,3)).join('')}</div></div>`}},
+ {id:'topology',group:'业务数据抓取与接入',name:'底层接入状态雷达拓扑图',desc:'实时查看八个业务系统与中台的连接健康度和心跳状态。',body:renderTopology},
  {id:'rules',group:'AI分析与智能分发',name:'复合订阅规则引擎搭建',desc:'选择子系统消息来源和消息类型，并组合条件配置门户订阅。',body:()=>`<div class="section"><div class="rule-group gkx-primary-section"><h2 class="section-title gkx-form-section-title">订阅来源</h2><div class="source-grid"><div class="field"><label for="sourceSubsystem">来源子系统</label><select class="control full" id="sourceSubsystem"><option value="">请选择子系统</option>${'ABCDEFGH'.split('').map(x=>`<option>业务系统 ${x}</option>`).join('')}</select></div><div class="field"><label for="sourceEvent">消息类型</label><select class="control full" id="sourceEvent" disabled><option value="">请先选择子系统</option><option>数据更新</option><option>预警通知</option></select></div></div><div class="divider"></div><h2 class="section-title gkx-form-section-title">消息筛选条件</h2><div class="row"><strong>条件组关系</strong><select class="control" aria-label="组内关系"><option>且</option><option>或</option></select><span class="subtle">组间关系</span><select class="control" aria-label="组间关系"><option>或</option><option>且</option></select><span class="subtle">拖动条件行可调整顺序</span></div><div class="condition"><span class="condition-label">条件 A</span><select aria-label="条件A字段"><option>选择字段</option><option>情报标题</option><option>业务分类</option></select><select aria-label="条件A关系"><option>包含</option><option>等于</option></select><input aria-label="条件A内容" placeholder="输入条件值"></div><div class="condition"><span class="condition-label">条件 B</span><select aria-label="条件B字段"><option>选择字段</option><option>情报标题</option><option>业务分类</option></select><select aria-label="条件B关系"><option>包含</option><option>等于</option></select><input aria-label="条件B内容" placeholder="输入条件值"></div><div class="condition"><span class="condition-label">条件 C</span><select aria-label="条件C字段"><option>选择字段</option><option>情报标题</option><option>业务分类</option></select><select aria-label="条件C关系"><option>包含</option><option>等于</option></select><input aria-label="条件C内容" placeholder="输入条件值"></div><div class="divider"></div><div class="row between"><div><strong>命中后的接收位置</strong><p class="subtle" style="margin:4px 0 0">门户消息中心 · 当前登录用户订阅流</p></div><div class="row"><button class="btn" data-action="condition">添加条件</button><button class="btn primary" data-action="save">保存订阅规则</button></div></div><div id="ruleResult" class="notice" hidden style="margin-top:16px"></div></div></div>`},
  {id:'collect',group:'AI分析与智能分发',name:'创新需求与情报主动征集窗口',desc:'提交技术动态线索或监控盲区。',body:()=>`<div class="section" style="max-width:760px"><div class="form-grid"><div class="field full-row"><label for="kind">提报内容</label><select class="control full" id="kind"><option>技术动态线索</option><option>监控盲区</option></select></div><div class="field full-row"><label for="clue">线索描述</label><textarea class="control full" id="clue" placeholder="填写需要关注的技术动态或当前监控盲区"></textarea></div><div class="row end full-row"><button class="btn primary" data-action="submit">提交线索</button></div></div></div></div>`},
  {id:'workflow',group:'AI分析与智能分发',name:'创新情报内部定向批示流转',desc:'将重要情报在工作台内流转批示。',body:renderWorkflow},
@@ -150,9 +166,68 @@ function bindDrillDashboard(){
  if(typeof ResizeObserver==='function'){drillResizeObserver=new ResizeObserver(()=>draw());drillResizeObserver.observe(stage)}
 }
 
+let cleanupTopologyCanvas=null;
+function bindTopologyCanvas(){
+ cleanupTopologyCanvas?.();cleanupTopologyCanvas=null;
+ const canvas=page.querySelector('.topology-canvas');
+ if(!canvas)return;
+ const svg=canvas.querySelector('.topology-wires'),hub=canvas.querySelector('.hub-grid');
+ const nodes=[...canvas.querySelectorAll('[data-node]')];
+ const links=new Map([...svg.querySelectorAll('[data-link-node]')].map(link=>[link.dataset.linkNode,link]));
+ const events=new AbortController();
+ let disposed=false,frame=0,hovered=null,focused=null,selected=null;
+ const highlight=()=>nodes.forEach(node=>{
+  const id=node.dataset.node,active=id===hovered||id===focused||id===selected;
+  node.classList.toggle('is-highlighted',active);
+  node.classList.toggle('is-selected',id===selected);
+  node.setAttribute('aria-expanded',String(id===selected));
+  links.get(id)?.classList.toggle('is-active',active);
+ });
+ const targetNode=target=>target instanceof Element?target.closest('.top-node[data-node]'):null;
+ canvas.addEventListener('pointerover',event=>{const node=targetNode(event.target);if(node){hovered=node.dataset.node;highlight()}},{signal:events.signal});
+ canvas.addEventListener('pointerout',event=>{const node=targetNode(event.target),next=targetNode(event.relatedTarget);if(node&&node!==next){hovered=next?.dataset.node??null;highlight()}},{signal:events.signal});
+ canvas.addEventListener('pointerleave',()=>{hovered=null;highlight()},{signal:events.signal});
+ canvas.addEventListener('focusin',event=>{focused=targetNode(event.target)?.dataset.node??null;highlight()},{signal:events.signal});
+ canvas.addEventListener('focusout',event=>{focused=targetNode(event.relatedTarget)?.dataset.node??null;highlight()},{signal:events.signal});
+ canvas.addEventListener('click',event=>{const node=targetNode(event.target);if(node){selected=node.dataset.node;hovered=null;highlight()}},{signal:events.signal});
+ const drawerState=new MutationObserver(()=>{if(!drawer.classList.contains('open')){selected=null;highlight()}});
+ drawerState.observe(drawer,{attributes:true,attributeFilter:['class']});
+ const draw=()=>{
+  frame=0;
+  if(disposed||!canvas.isConnected)return;
+  const compact=canvas.clientWidth<600;
+  if(canvas.classList.contains('is-compact')!==compact)canvas.classList.toggle('is-compact',compact);
+  if(compact||matchMedia('(max-width: 767px)').matches)return;
+  const viewport=svg.getBoundingClientRect(),center=hub.getBoundingClientRect();
+  if(!viewport.width||!viewport.height)return;
+  svg.setAttribute('viewBox',`0 0 ${viewport.width} ${viewport.height}`);
+  nodes.forEach((node,index)=>{
+   const rect=node.getBoundingClientRect(),left=index<4,direction=left?1:-1;
+   const x=(left?rect.right:rect.left)-viewport.left,y=(rect.top+rect.bottom)/2-viewport.top;
+   const hubX=(left?center.left:center.right)-viewport.left,hubY=center.top+center.height*(.2+(index%4)*.2)-viewport.top;
+   const bend=Math.max(8,Math.min(80,Math.abs(hubX-x)*.6));
+   const link=links.get(node.dataset.node),path=link.querySelector('path');
+   path.setAttribute('d',`M ${x} ${y} C ${x+direction*bend} ${y}, ${hubX-direction*bend} ${hubY}, ${hubX} ${hubY}`);
+   for(const [port,px,py] of [[link.querySelector('.topology-port-node'),x,y],[link.querySelector('.topology-port-hub'),hubX,hubY]]){port.setAttribute('cx',px);port.setAttribute('cy',py)}
+  });
+  canvas.classList.add('has-wires');
+ };
+ const schedule=()=>{if(!disposed&&!frame)frame=requestAnimationFrame(draw)};
+ const resize=typeof ResizeObserver==='function'?new ResizeObserver(schedule):null;
+ [canvas,hub,...nodes].forEach(node=>resize?.observe(node));
+ window.addEventListener('resize',schedule,{signal:events.signal});
+ document.fonts?.ready.then(schedule);
+ schedule();
+ cleanupTopologyCanvas=()=>{
+  disposed=true;events.abort();resize?.disconnect();drawerState.disconnect();cancelAnimationFrame(frame);
+  if(selected!==null&&drawer.classList.contains('open'))closeDrawer();
+ };
+}
+
 function bindPage(){
+ bindTopologyCanvas();
  bindDrillDashboard();
- document.querySelectorAll('[data-node]').forEach(b=>b.onclick=()=>{const data=[['业务系统 A','正常','10:46:21','10:46:20','38 ms','0'],['业务系统 B','正常','10:46:20','10:46:18','62 ms','0'],['业务系统 C','延迟','10:45:10','10:41:52','428 ms','2'],['业务系统 D','正常','10:46:19','10:46:16','51 ms','0'],['业务系统 E','离线','10:40:12','10:33:04','—','6'],['业务系统 F','正常','10:46:17','10:46:15','73 ms','0'],['业务系统 G','正常','10:46:16','10:46:14','95 ms','0'],['业务系统 H','正常','10:46:15','10:46:12','66 ms','0']][Number(b.dataset.node)];drawer.innerHTML=`<div class=\"drawer-head\"><h2>${data[0]} · 接入详情</h2><button class=\"close\" aria-label=\"关闭\">×</button></div><div class=\"section\"><span class=\"status ${data[1]==='离线'?'error':data[1]==='延迟'?'warn':''}\">连接${data[1]}</span></div><div class=\"section\"><dl class=\"gkx-detail-grid\">${['连接状态','心跳','最近成功采集','延迟','异常数'].map((label,i)=>`<div><dt>${label}</dt><dd>${data[i+1]}</dd></div>`).join('')}</dl></div><div class=\"section\"><h3 class=\"section-title\">异常记录</h3>${Number(data[5])>0?`<div class=\"notice\">存在 ${data[5]} 条接入异常，采集任务可重新执行。</div><div class=\"row end drawer-actions\" style=\"margin-top:16px\"><button class=\"btn primary\" data-action=\"retry\">重试采集</button></div>`:'<div class=\"empty\">暂无异常记录</div>'}</div>`;drawer.classList.add('open');drawerMask.classList.add('open');drawer.querySelector('.close').onclick=closeDrawer;drawer.querySelector('[data-action=\"retry\"]')?.addEventListener('click',()=>{closeDrawer();showToast('已提交采集重试')})});
+ document.querySelectorAll('[data-node]').forEach(b=>b.onclick=()=>{const data=topologyNodes[Number(b.dataset.node)];drawer.innerHTML=`<div class=\"drawer-head\"><h2>${data[0]} · 接入详情</h2><button class=\"close\" aria-label=\"关闭\">×</button></div><div class=\"section\"><span class=\"status ${data[1]==='离线'?'error':data[1]==='延迟'?'warn':''}\">连接${data[1]}</span></div><div class=\"section\"><dl class=\"gkx-detail-grid\">${['连接状态','心跳','最近成功采集','延迟','异常数'].map((label,i)=>`<div><dt>${label}</dt><dd>${data[i+1]}</dd></div>`).join('')}</dl></div><div class=\"section\"><h3 class=\"section-title\">异常记录</h3>${Number(data[5])>0?`<div class=\"notice\">存在 ${data[5]} 条接入异常，采集任务可重新执行。</div><div class=\"row end drawer-actions\" style=\"margin-top:16px\"><button class=\"btn primary\" data-action=\"retry\">重试采集</button></div>`:'<div class=\"empty\">暂无异常记录</div>'}</div>`;drawer.classList.add('open');drawerMask.classList.add('open');drawer.querySelector('.close').onclick=closeDrawer;drawer.querySelector('[data-action=\"retry\"]')?.addEventListener('click',()=>{closeDrawer();showToast('已提交采集重试')})});
  const slider=document.getElementById('thresholdRange');slider?.addEventListener('input',()=>{document.getElementById('thresholdValue').textContent=slider.value+'%';document.querySelectorAll('.sample-score').forEach(el=>{const send=Number(el.dataset.score)>=Number(slider.value);el.classList.toggle('warn',!send);el.textContent=`识别分数 ${el.dataset.score}% · ${send?'自动分发':'不触发自动分发'}`})});
  const searchForm=document.getElementById('searchForm');if(searchForm){const input=document.getElementById('searchText');searchForm.addEventListener('submit',event=>{event.preventDefault();updateSearch(input.value)});searchForm.addEventListener('reset',event=>{event.preventDefault();input.value='';updateSearch('');input.focus()});input.addEventListener('input',()=>{if(!input.value)updateSearch('')});updateSearch(input.value)}
  page.querySelectorAll('[data-correction-id]').forEach(input=>input.addEventListener('input',()=>{const record=annotationState.find(r=>r.id===input.dataset.correctionId);record.correction=input.value;if(record.reviewed&&record.label!==input.value.trim()){record.reviewed=false;input.closest('tr').cells[4].innerHTML='<span class="status warn">待审核</span>'}}));
