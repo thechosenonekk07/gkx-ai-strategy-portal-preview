@@ -557,26 +557,113 @@ td > .gkx-text-input { width: 100%; min-width: 128px; }
 .voice-find-replace > .gkx-text-input { width: 180px; }
 .voice-find-replace > #replaceResult { flex: 1 1 100%; }
 .voice-lexicon-entry { align-items: flex-start; }
-/* Feedback belongs to the recording state; text actions belong to the editor.
-   These groups stay together at natural width rather than using page edges. */
+/* Prepare, control, then edit. Major groups have breathing room; related
+   fields keep smaller gaps. No extra card, divider, or visual-only reordering. */
+html[data-workbench="voice"] .voice-realtime-recorder {
+  container: voice-realtime / inline-size;
+  display: grid;
+  gap: 0;
+  min-width: 0;
+  margin: 0;
+}
+html[data-workbench="voice"] .voice-realtime-stage { min-width: 0; margin: 0; }
+html[data-workbench="voice"] .voice-realtime-stage + .voice-realtime-stage { margin-top: 32px; }
+html[data-workbench="voice"] .voice-settings-fields {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px 24px;
+  min-width: 0;
+}
+html[data-workbench="voice"] .voice-host-context-slot { flex: 0 1 auto; min-width: 0; max-width: 100%; }
+html[data-workbench="voice"] .voice-host-context-slot > .integration-context {
+  position: static;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  width: auto;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  gap: 16px;
+}
+html[data-workbench="voice"] .voice-host-context-slot .integration-context label {
+  display: inline-block;
+  flex: 0 0 auto;
+  grid-area: auto;
+  font-size: 14px;
+  line-height: 22px;
+  white-space: nowrap;
+}
+html[data-workbench="voice"] .voice-host-context-slot .context-select {
+  grid-area: auto;
+  flex: 0 1 auto;
+  width: auto;
+  min-width: 96px;
+  max-width: 100%;
+  height: 32px;
+  padding: 0 12px;
+  font-size: 14px;
+  line-height: 22px;
+}
+html[data-workbench="voice"] .voice-host-context-slot .gkx-select.context-select {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+html[data-workbench="voice"] .voice-language-field { flex: 0 1 auto; min-width: 0; }
+html[data-workbench="voice"] .voice-record-context { margin: 8px 0 0; }
+html[data-workbench="voice"] .voice-record-context b { font-weight: 400; }
+html[data-workbench="voice"] .voice-hotword-field { margin-top: 24px; }
+html[data-workbench="voice"] .voice-hotword-heading { font-weight: 500; }
+html[data-workbench="voice"] .voice-hotword-heading small {
+  display: block;
+  margin-top: 4px;
+  color: var(--text3);
+  font-weight: 400;
+}
+html[data-workbench="voice"] .voice-hotword-field .hotword-list { margin-top: 12px; }
+html[data-workbench="voice"] .voice-hotword-field .hotword-list:empty { display: none; }
+html[data-workbench="voice"] .voice-record-controls { display: grid; gap: 12px; }
 html[data-workbench="voice"] .voice-realtime-recorder .voice-record-feedback {
   justify-content: flex-start;
   gap: 8px 16px;
 }
-html[data-workbench="voice"] .voice-record-context { margin: 4px 0 0; }
 html[data-workbench="voice"] .voice-transcript-toolbar {
   justify-content: flex-start;
   gap: 8px 12px;
 }
 html[data-workbench="voice"] .voice-transcript-toolbar > .voice-transcript-label {
   margin: 0;
-  color: var(--text2);
-  font-size: 14px;
-  line-height: 22px;
+  color: #1d2129;
+  font-size: 16px;
+  line-height: 24px;
   font-weight: 500;
 }
 html[data-workbench="voice"] .voice-transcript-hint { margin: 4px 0 0; }
-html[data-workbench="voice"] .voice-transcript-section > .editor { margin-top: 8px; }
+html[data-workbench="voice"] .voice-transcript-section > .editor { margin-top: 12px; }
+@container voice-realtime (max-width: 640px) {
+  html[data-workbench="voice"] .voice-realtime-stage + .voice-realtime-stage { margin-top: 24px; }
+  html[data-workbench="voice"] .voice-host-context-slot,
+  html[data-workbench="voice"] .voice-language-field { flex: 1 1 100%; width: 100%; }
+  html[data-workbench="voice"] .voice-host-context-slot > .integration-context,
+  html[data-workbench="voice"] .voice-language-field {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+  }
+  html[data-workbench="voice"] .voice-host-context-slot label[for="hostSystem"] { grid-area: 1 / 1; }
+  html[data-workbench="voice"] .voice-host-context-slot label[for="hostScene"] { grid-area: 2 / 1; }
+  html[data-workbench="voice"] .voice-host-context-slot .integration-context > :is(#hostSystem, .gkx-select[data-control-id="hostSystem"]) { grid-area: 1 / 2; }
+  html[data-workbench="voice"] .voice-host-context-slot .integration-context > :is(#hostScene, .gkx-select[data-control-id="hostScene"]) { grid-area: 2 / 2; }
+  html[data-workbench="voice"] .voice-host-context-slot .context-select,
+  html[data-workbench="voice"] .voice-language-field > :is(.control, .gkx-select) { width: 100%; min-width: 0; }
+}
 @media (max-width: 767px) {
   .voice-editor-action-group { width: 100%; }
   .voice-find-replace > .gkx-text-input { flex: 1 1 140px; width: auto; min-width: 0; }

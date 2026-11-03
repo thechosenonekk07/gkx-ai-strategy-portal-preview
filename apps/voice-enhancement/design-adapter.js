@@ -32,6 +32,12 @@
   document.querySelector('.main').prepend(breadcrumbBar);
   app.classList.add('has-breadcrumb-layout');
 
+  function placeIntegrationContext() {
+    const realtimeSlot = content.querySelector('[data-voice-host-context]');
+    if (realtimeSlot) realtimeSlot.append(integrationContext);
+    else content.prepend(integrationContext);
+  }
+
   function syncPageChrome() {
     breadcrumb.querySelector('[aria-current="page"]').textContent = content.querySelector('h1')?.textContent || '';
   }
@@ -66,7 +72,7 @@
     // Keep the original host fields in the document while renderPage reads them.
     breadcrumbBar.append(integrationContext);
     const result = baseRenderPage(...args);
-    content.prepend(integrationContext);
+    placeIntegrationContext();
     restoreHistoryExportDraft();
     syncPageChrome();
     if (focusKey && (document.activeElement === document.body || document.activeElement === focused)) {
@@ -77,7 +83,7 @@
     }
     return result;
   };
-  content.prepend(integrationContext);
+  placeIntegrationContext();
   syncPageChrome();
   dialog.tabIndex = -1;
 
