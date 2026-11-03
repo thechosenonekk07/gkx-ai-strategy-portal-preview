@@ -1,0 +1,98 @@
+/* Explicit content roles, mapped after auditing both workbenches.
+   Page identity stays in the breadcrumb. These are not global h2/h3 resets.
+   The blue marker follows the existing workbench convention; the 16/24 and
+   14/22 scale follows the archived references and the current admin system. */
+html[data-workbench] {
+  --gkx-module-title-size: 16px;
+  --gkx-module-title-line: 24px;
+  --gkx-group-title-size: 14px;
+  --gkx-group-title-line: 22px;
+  --gkx-module-content-gap: 16px;
+  --gkx-group-content-gap: 12px;
+}
+
+html[data-workbench] .gkx-module-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  margin: 0 0 var(--gkx-module-content-gap);
+  color: #1d2129;
+  font-size: var(--gkx-module-title-size);
+  line-height: var(--gkx-module-title-line);
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+html[data-workbench] .gkx-module-title::before {
+  content: "";
+  display: block;
+  flex: 0 0 3px;
+  width: 3px;
+  height: 16px;
+  background: #165dff;
+}
+/* A dashboard context already belongs to its own named analysis region. */
+html[data-workbench] .gkx-module-title-plain::before { content: none; }
+
+html[data-workbench] .gkx-module-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  min-width: 0;
+  margin-bottom: var(--gkx-module-content-gap);
+  gap: 8px 16px;
+}
+html[data-workbench] .gkx-module-header > .gkx-module-title { margin: 0; }
+
+html[data-workbench] .gkx-subsection-title {
+  display: block;
+  min-width: 0;
+  margin: 0 0 var(--gkx-group-content-gap);
+  color: #1d2129;
+  font-size: var(--gkx-group-title-size);
+  line-height: var(--gkx-group-title-line);
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+html[data-workbench] .gkx-subsection-title::before { content: none; }
+html[data-workbench] .gkx-subsection-title.section { margin-top: 20px; }
+
+/* Entity headings retain their own card/row boundary and compact type scale. */
+html[data-workbench] .gkx-record-title {
+  margin: 0;
+  color: #1d2129;
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+html[data-workbench] .gkx-field-label {
+  color: #4e5969;
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 400;
+}
+
+/* Sequential modules share a white work surface, with one boundary only.
+   Parent gap is zero so the established 24px + rule + 24px rhythm is not
+   added to a second grid gap. Master-detail and record grids are excluded. */
+html[data-workbench] .gkx-section-stack {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 0;
+  min-width: 0;
+}
+html[data-workbench] .gkx-section-stack > .gkx-primary-section {
+  min-width: 0;
+  margin: 0;
+}
+html[data-workbench] .gkx-section-stack > .gkx-primary-section + .gkx-primary-section {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #e5e6eb;
+}
+
+/* Boundary headings do not animate or change size with recording states.
+   Long names wrap within the same module; narrow screens keep the same rank. */

@@ -710,15 +710,17 @@ html[data-workbench="voice"] .voice-transcript-toolbar {
   gap: 8px 12px;
 }
 html[data-workbench="voice"] .voice-transcript-toolbar > .btn { margin-left: auto; }
-html[data-workbench="voice"] .voice-transcript-toolbar > .voice-transcript-label {
+html[data-workbench="voice"] .voice-transcript-toolbar .voice-transcript-label {
   margin: 0;
-  color: #1d2129;
-  font-size: 14px;
-  line-height: 22px;
-  font-weight: 500;
+  color: inherit;
+  font: inherit;
 }
 html[data-workbench="voice"] .voice-transcript-hint { margin: 4px 0 0; }
 html[data-workbench="voice"] .voice-transcript-section > .editor { margin-top: 12px; }
+/* Shared title rows own their following gap; preserve the existing control rhythm. */
+html[data-workbench="voice"] .gkx-module-header + :is(.section, .metric-row, .quality-bars) { margin-top: 0; }
+html[data-workbench="voice"] .voice-history-draft > p,
+html[data-workbench="voice"] .voice-request-example > .code { margin: 0; }
 @container voice-realtime (max-width: 640px) {
   html[data-workbench="voice"] .voice-host-context-slot,
   html[data-workbench="voice"] .voice-language-field { flex: 1 1 100%; width: 100%; }
