@@ -155,7 +155,7 @@
   confirmation.className = 'confirm-dialog';
   confirmation.setAttribute('aria-labelledby', 'confirmTitle');
   confirmation.setAttribute('aria-describedby', 'confirmDescription');
-  confirmation.innerHTML = '<form method="dialog"><header class="confirm-head"><h2 id="confirmTitle">撤回情报</h2><button class="close" value="cancel" aria-label="关闭对话框">×</button></header><div class="confirm-body"><p id="confirmDescription"></p><p class="subtle">撤回后，该情报将标记为“已撤回”。</p></div><footer class="confirm-actions"><button class="btn" value="cancel" autofocus>取消</button><button class="btn danger" value="confirm">确认撤回</button></footer></form>';
+  confirmation.innerHTML = '<form method="dialog"><header class="confirm-head"><h2 id="confirmTitle">撤回情报</h2><button class="close" value="cancel" aria-label="关闭对话框">×</button></header><div class="confirm-body"><p id="confirmDescription"></p><p class="subtle">撤回后，该情报将标记为“已撤回”。</p></div><footer class="confirm-actions"><button class="btn" value="cancel" autofocus>取消</button><button class="btn primary" value="confirm">确认撤回</button></footer></form>';
   document.body.append(confirmation);
   const closeConfirmation = value => {
     if (window.GKXSurface?.closeDialog) window.GKXSurface.closeDialog(confirmation, value);

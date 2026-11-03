@@ -586,6 +586,14 @@ html[data-workbench="voice"] .voice-lexicon-field > :is(.control, .gkx-select, .
   max-width: 100%;
 }
 html[data-workbench="voice"] .voice-lexicon-field > .gkx-field-error { grid-area: 2 / 2; margin: 0; }
+/* Keep peers on the editable control line while its error expands below. */
+html[data-workbench="voice"] #voiceLexiconTable tbody tr:has(.gkx-field-error) > td { vertical-align: top; }
+html[data-workbench="voice"] #voiceLexiconTable tbody tr:has(.gkx-field-error) > td > .gkx-text-input { display: flex; }
+html[data-workbench="voice"] #voiceLexiconTable tbody tr:has(.gkx-field-error) .voice-lexicon-peer {
+  display: flex;
+  align-items: center;
+  min-height: 32px;
+}
 html[data-workbench="voice"] .voice-lexicon-compose {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -689,6 +697,8 @@ html[data-workbench="voice"] .voice-hotword-heading small {
 }
 html[data-workbench="voice"] .voice-hotword-field .hotword-list { margin-top: 12px; }
 html[data-workbench="voice"] .voice-hotword-field .hotword-list:empty { display: none; }
+html[data-workbench="voice"] .voice-hotword-entry-row { align-items: flex-start; }
+html[data-workbench="voice"] .voice-hotword-count { display: inline-flex; align-items: center; min-height: 32px; }
 html[data-workbench="voice"] .voice-record-controls { display: block; }
 html[data-workbench="voice"] .voice-record-actions { margin-top: 12px; }
 html[data-workbench="voice"] .voice-realtime-recorder .voice-record-feedback {
@@ -696,9 +706,10 @@ html[data-workbench="voice"] .voice-realtime-recorder .voice-record-feedback {
   gap: 8px 16px;
 }
 html[data-workbench="voice"] .voice-transcript-toolbar {
-  justify-content: flex-start;
+  justify-content: space-between;
   gap: 8px 12px;
 }
+html[data-workbench="voice"] .voice-transcript-toolbar > .btn { margin-left: auto; }
 html[data-workbench="voice"] .voice-transcript-toolbar > .voice-transcript-label {
   margin: 0;
   color: #1d2129;

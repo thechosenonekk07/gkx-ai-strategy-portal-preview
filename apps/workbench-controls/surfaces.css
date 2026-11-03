@@ -62,19 +62,34 @@ html[data-workbench] .table-wrap td > .gkx-tag { vertical-align: middle; }
 .gkx-tag.success,
 .gkx-tag[data-tone="success"] { background: #e8ffea; color: #00b42a; }
 
-html[data-workbench] .btn { border-color: transparent; background: #f2f3f5; color: #4e5969; }
-html[data-workbench] .btn:hover { border-color: transparent; background: #e5e6eb; color: #4e5969; }
-html[data-workbench] .btn:active { border-color: transparent; background: #c9cdd4; color: #4e5969; }
+/* Current portal reference: default actions are white outlined, while role
+   classes distinguish task completion, display controls and destruction. */
+html[data-workbench] .btn { border-color: #e5e6eb; background: #fff; color: #1d2129; }
+html[data-workbench] .btn:hover { border-color: #4080ff; background: #fff; color: #165dff; }
+html[data-workbench] .btn:active { border-color: #0e42d2; background: #fff; color: #0e42d2; }
+html[data-workbench] .btn:not(.primary):not(.danger):not(.text):not(:disabled):focus-visible { border-color: #4080ff; background: #fff; color: #165dff; outline: 2px solid rgba(22, 93, 255, .18); outline-offset: 1px; }
 html[data-workbench] .btn.primary { border-color: #165dff; background: #165dff; color: #fff; }
 html[data-workbench] .btn.primary:hover { border-color: #4080ff; background: #4080ff; color: #fff; }
 html[data-workbench] .btn.primary:active { border-color: #0e42d2; background: #0e42d2; color: #fff; }
 html[data-workbench] .btn.danger { border-color: #f53f3f; background: #f53f3f; color: #fff; }
 html[data-workbench] .btn.danger:hover { border-color: #f76560; background: #f76560; color: #fff; }
 html[data-workbench] .btn.danger:active { border-color: #cb272d; background: #cb272d; color: #fff; }
+html[data-workbench] .btn.text { min-height: 32px; height: 32px; padding: 0 4px; border-color: transparent; background: transparent; color: #165dff; }
+html[data-workbench] .btn.text:hover { border-color: transparent; background: #f2f3f5; color: #4080ff; }
+html[data-workbench] .btn.text:active { border-color: transparent; background: #e5e6eb; color: #0e42d2; }
+html[data-workbench] .link.danger-link { color: #f53f3f; }
+html[data-workbench] .link.danger-link:hover { color: #f76560; }
+html[data-workbench] .link.danger-link:active { color: #cb272d; }
 html[data-workbench] .btn:disabled,
 html[data-workbench] .btn:disabled:is(:hover, :active, :focus-visible) { border-color: #e5e6eb; background: #f7f8fa; color: #c9cdd4; cursor: not-allowed; }
 html[data-workbench] .btn.primary:disabled,
 html[data-workbench] .btn.primary:disabled:is(:hover, :active, :focus-visible) { border-color: #94bfff; background: #94bfff; color: #fff; }
+html[data-workbench] .btn.text:disabled,
+html[data-workbench] .btn.text:disabled:is(:hover, :active, :focus-visible) { border-color: transparent; background: transparent; color: #c9cdd4; }
+html[data-workbench] .link:disabled,
+html[data-workbench] .link:disabled:is(:hover, :active, :focus-visible),
+html[data-workbench] .link[aria-disabled="true"],
+html[data-workbench] .link[aria-disabled="true"]:is(:hover, :active, :focus-visible) { color: #c9cdd4; background: transparent; cursor: not-allowed; text-decoration: none; }
 
 html[data-workbench] .gkx-close-control {
   position: relative;
