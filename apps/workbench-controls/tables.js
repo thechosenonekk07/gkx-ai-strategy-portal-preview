@@ -19,6 +19,15 @@
       from: matched.length ? start + 1 : 0, to: Math.min(start + size, matched.length),
       records: matched.slice(start, start + size) };
   }
+  function locateRow(records, query, filters, row, pageSize) {
+    const sourceIndex = records.findIndex(record => record.row === row);
+    if (sourceIndex < 0) return null;
+    const matched = computePage(records, query, filters, 1, Math.max(1, records.length)).records;
+    const matchedIndex = matched.findIndex(record => record.row === row);
+    const clearFilters = matchedIndex < 0;
+    const size = Math.max(1, Math.trunc(Number(pageSize)) || 10);
+    return { clearFilters, page: Math.floor((clearFilters ? sourceIndex : matchedIndex) / size) + 1 };
+  }
   function pageNumbers(page, pages) {
     const selected = new Set([1, pages]);
     const start = Math.max(1, Math.min(page - 2, pages - 4));
@@ -155,7 +164,29 @@
       const target = shownRows.flatMap(row => [...row.querySelectorAll('button:not(:disabled),input:not(:disabled),select:not(:disabled),a[href]')]).find(isVisible) || keyword;
       target.focus({ preventScroll: true }); return target;
     }
-    const controller = { table, refresh, rows: () => [...allRows], visibleRows: () => [...shownRows], getState: () => snapshot ? { ...snapshot } : null, ensureFocus };
+    function reveal(row) {
+      if (!table.isConnected || !row?.isConnected || row.parentElement !== table.tBodies[0] || row.closest('table') !== table) return false;
+      const target = locateRow(collect(), state.query, state.filters, row, state.pageSize);
+      if (!target) return false;
+      if (target.clearFilters) {
+        state.query = ''; keyword.value = '';
+        Object.keys(state.filters).forEach(key => { state.filters[key] = ''; });
+        filterControls.forEach(control => { control.value = ''; });
+        keyword.dispatchEvent(new Event('input', { bubbles: true }));
+        keyword.dispatchEvent(new Event('change', { bubbles: true }));
+        filterControls.forEach(control => control.dispatchEvent(new Event('change', { bubbles: true })));
+      }
+      state.page = target.page;
+      refresh({ reason: 'reveal' });
+      const available = node => isVisible(node) && !node.disabled && !node.closest('[inert]');
+      const preferred = [...row.querySelectorAll('input:not([type=hidden]):not(:disabled):not([readonly]),textarea:not(:disabled):not([readonly]),select:not(:disabled),.gkx-select-trigger:not(:disabled),[contenteditable]:not([contenteditable="false"])')].find(available)
+        || [...row.querySelectorAll('button:not(:disabled),a[href],[tabindex]')].find(available);
+      if (!preferred && !row.hasAttribute('tabindex')) row.tabIndex = -1;
+      row.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'auto' });
+      ensureFocus(preferred || row);
+      return true;
+    }
+    const controller = { table, refresh, rows: () => [...allRows], visibleRows: () => [...shownRows], getState: () => snapshot ? { ...snapshot } : null, ensureFocus, reveal };
     controllers.set(table, controller);
     function notify(reason) {
       lastReason = reason;
@@ -170,7 +201,7 @@
       const active = document.activeElement;
       const rowWasFocused = table.contains(active);
       const focusedPage = numbers.contains(active);
-      if (['query', 'page', 'size', 'reset'].includes(reason)) clearSelection();
+      if (['query', 'page', 'size', 'reset', 'reveal'].includes(reason)) clearSelection();
       const result = computePage(collect(), state.query, state.filters, state.page, state.pageSize);
       state.page = result.page; shownRows = result.records.map(record => record.row);
       const visible = new Set(shownRows);
@@ -220,6 +251,7 @@
   }
   window.GKXTables = { mount, refresh: (table, options) => controllers.get(table)?.refresh(options),
     ensureFocus: (table, preferred) => controllers.get(table)?.ensureFocus(preferred),
+    reveal: (table, row) => controllers.get(table)?.reveal(row) ?? false,
     visibleRows: table => controllers.get(table)?.visibleRows() || [], computePage, pageNumbers };
   document.dispatchEvent(new Event('gkx:tables-ready'));
 })();

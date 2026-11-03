@@ -556,9 +556,72 @@ td > .gkx-text-input { width: 100%; min-width: 128px; }
 .voice-editor-action-group > .gkx-text-input { flex: 0 1 auto; min-width: 140px; }
 .voice-find-replace > .gkx-text-input { width: 180px; }
 .voice-find-replace > #replaceResult { flex: 1 1 100%; }
-.voice-lexicon-entry { align-items: flex-start; }
-/* Prepare, control, then edit. Major groups have breathing room; related
-   fields keep smaller gaps. No extra card, divider, or visual-only reordering. */
+#semanticLibrary { container: voice-lexicon / inline-size; }
+html[data-workbench="voice"] .voice-lexicon-entry {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px 24px;
+  align-items: start;
+  min-width: 0;
+  max-width: 1120px;
+}
+html[data-workbench="voice"] .voice-lexicon-field {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  align-items: start;
+  min-width: 0;
+  gap: 4px 8px;
+}
+html[data-workbench="voice"] .voice-lexicon-field > label {
+  grid-area: 1 / 1;
+  color: var(--text2);
+  font-size: 14px;
+  line-height: 32px;
+  white-space: nowrap;
+}
+html[data-workbench="voice"] .voice-lexicon-field > :is(.control, .gkx-select, .gkx-text-input) {
+  grid-area: 1 / 2;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+html[data-workbench="voice"] .voice-lexicon-field > .gkx-field-error { grid-area: 2 / 2; margin: 0; }
+html[data-workbench="voice"] .voice-lexicon-compose {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  min-width: 0;
+  gap: 12px;
+}
+html[data-workbench="voice"] .voice-lexicon-compose > button { justify-self: end; white-space: nowrap; }
+html[data-workbench="voice"] .voice-lexicon-feedback {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  min-width: 0;
+  margin-top: 8px;
+  gap: 8px 16px;
+  color: var(--text2);
+  font-size: 12px;
+  line-height: 20px;
+  overflow-wrap: anywhere;
+}
+@container voice-lexicon (min-width: 560px) {
+  html[data-workbench="voice"] .voice-lexicon-entry { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  html[data-workbench="voice"] .voice-lexicon-compose { grid-column: 1 / -1; grid-template-columns: minmax(0, 1fr) max-content; }
+}
+@container voice-lexicon (min-width: 900px) {
+  html[data-workbench="voice"] .voice-lexicon-entry { grid-template-columns: 204px 196px minmax(0, 1fr); }
+  html[data-workbench="voice"] .voice-lexicon-compose { grid-column: auto; }
+}
+/* An error grows its own field, without becoming a full-width flex item. */
+html[data-workbench="voice"] .voice-inline-input-field { flex: 0 1 260px; width: 260px; min-width: 0; max-width: 100%; }
+html[data-workbench="voice"] .voice-inline-input-field > :is(.control, .gkx-text-input) { width: 100%; min-width: 0; max-width: 100%; }
+html[data-workbench="voice"] .voice-find-input-field { flex-basis: 180px; width: 180px; }
+html[data-workbench="voice"] .voice-find-replace { align-items: flex-start; }
+html[data-workbench="voice"] .voice-find-replace > label { min-height: 32px; }
+/* Prepare, control, then edit. Shared section titles and separators match the
+   session page; inner fields retain their own smaller spacing. */
 html[data-workbench="voice"] .voice-realtime-recorder {
   container: voice-realtime / inline-size;
   display: grid;
@@ -567,7 +630,6 @@ html[data-workbench="voice"] .voice-realtime-recorder {
   margin: 0;
 }
 html[data-workbench="voice"] .voice-realtime-stage { min-width: 0; margin: 0; }
-html[data-workbench="voice"] .voice-realtime-stage + .voice-realtime-stage { margin-top: 32px; }
 html[data-workbench="voice"] .voice-settings-fields {
   display: flex;
   align-items: flex-start;
@@ -627,7 +689,8 @@ html[data-workbench="voice"] .voice-hotword-heading small {
 }
 html[data-workbench="voice"] .voice-hotword-field .hotword-list { margin-top: 12px; }
 html[data-workbench="voice"] .voice-hotword-field .hotword-list:empty { display: none; }
-html[data-workbench="voice"] .voice-record-controls { display: grid; gap: 12px; }
+html[data-workbench="voice"] .voice-record-controls { display: block; }
+html[data-workbench="voice"] .voice-record-actions { margin-top: 12px; }
 html[data-workbench="voice"] .voice-realtime-recorder .voice-record-feedback {
   justify-content: flex-start;
   gap: 8px 16px;
@@ -639,14 +702,13 @@ html[data-workbench="voice"] .voice-transcript-toolbar {
 html[data-workbench="voice"] .voice-transcript-toolbar > .voice-transcript-label {
   margin: 0;
   color: #1d2129;
-  font-size: 16px;
-  line-height: 24px;
+  font-size: 14px;
+  line-height: 22px;
   font-weight: 500;
 }
 html[data-workbench="voice"] .voice-transcript-hint { margin: 4px 0 0; }
 html[data-workbench="voice"] .voice-transcript-section > .editor { margin-top: 12px; }
 @container voice-realtime (max-width: 640px) {
-  html[data-workbench="voice"] .voice-realtime-stage + .voice-realtime-stage { margin-top: 24px; }
   html[data-workbench="voice"] .voice-host-context-slot,
   html[data-workbench="voice"] .voice-language-field { flex: 1 1 100%; width: 100%; }
   html[data-workbench="voice"] .voice-host-context-slot > .integration-context,
@@ -666,6 +728,7 @@ html[data-workbench="voice"] .voice-transcript-section > .editor { margin-top: 1
 }
 @media (max-width: 767px) {
   .voice-editor-action-group { width: 100%; }
+  html[data-workbench="voice"] .voice-inline-input-field:has(#sessionHotwordInput) { flex-basis: 100%; width: 100%; }
   .voice-find-replace > .gkx-text-input { flex: 1 1 140px; width: auto; min-width: 0; }
   .shell.has-breadcrumb-layout .page > .integration-context .gkx-select.context-select { width: 100%; min-width: 0; }
 }
