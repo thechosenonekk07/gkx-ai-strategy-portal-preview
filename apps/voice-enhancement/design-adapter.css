@@ -557,6 +557,26 @@ td > .gkx-text-input { width: 100%; min-width: 128px; }
 .voice-find-replace > .gkx-text-input { width: 180px; }
 .voice-find-replace > #replaceResult { flex: 1 1 100%; }
 .voice-lexicon-entry { align-items: flex-start; }
+/* Feedback belongs to the recording state; text actions belong to the editor.
+   These groups stay together at natural width rather than using page edges. */
+html[data-workbench="voice"] .voice-realtime-recorder .voice-record-feedback {
+  justify-content: flex-start;
+  gap: 8px 16px;
+}
+html[data-workbench="voice"] .voice-record-context { margin: 4px 0 0; }
+html[data-workbench="voice"] .voice-transcript-toolbar {
+  justify-content: flex-start;
+  gap: 8px 12px;
+}
+html[data-workbench="voice"] .voice-transcript-toolbar > .voice-transcript-label {
+  margin: 0;
+  color: var(--text2);
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 500;
+}
+html[data-workbench="voice"] .voice-transcript-hint { margin: 4px 0 0; }
+html[data-workbench="voice"] .voice-transcript-section > .editor { margin-top: 8px; }
 @media (max-width: 767px) {
   .voice-editor-action-group { width: 100%; }
   .voice-find-replace > .gkx-text-input { flex: 1 1 140px; width: auto; min-width: 0; }
