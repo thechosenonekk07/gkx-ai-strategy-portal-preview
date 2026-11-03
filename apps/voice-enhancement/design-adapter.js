@@ -19,6 +19,16 @@
   const breadcrumbBar = document.querySelector('.app-strip');
   const integrationContext = breadcrumbBar.querySelector('.integration-context');
   integrationContext.classList.add('gkx-filter-form');
+  // The original controls are shared across routes. Give the same settings
+  // region the same heading without cloning fields or resetting their values.
+  const contextSection = document.createElement('section');
+  contextSection.className = 'gkx-primary-section voice-context-section';
+  contextSection.setAttribute('aria-labelledby', 'voiceContextTitle');
+  const contextHeading = document.createElement('h2');
+  contextHeading.id = 'voiceContextTitle';
+  contextHeading.className = 'gkx-module-title';
+  contextHeading.textContent = '录入设置';
+  contextSection.append(contextHeading);
   let historyExportDraft = null;
   const moduleName = breadcrumbBar.querySelector('strong').textContent;
   const breadcrumb = document.createElement('nav');
@@ -35,7 +45,12 @@
   function placeIntegrationContext() {
     const realtimeSlot = content.querySelector('[data-voice-host-context]');
     if (realtimeSlot) realtimeSlot.append(integrationContext);
-    else content.prepend(integrationContext);
+    else {
+      contextSection.append(integrationContext);
+      const pageHeading = content.querySelector(':scope > .page-head');
+      if (pageHeading) pageHeading.after(contextSection);
+      else content.prepend(contextSection);
+    }
   }
 
   function syncPageChrome() {
